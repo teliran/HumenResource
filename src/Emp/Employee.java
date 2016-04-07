@@ -18,9 +18,31 @@ public class Employee {
 		this.pos = pos;
 		this.bankNumber = bankNumber;
 		this.accountNumber = accountNumber;
-		this.startDate = startDate;
-		
+		this.startDate = startDate;	
 	}
+	
+	public static void showMenu(){
+		int usrInput;
+		while(true){
+			System.out.println("==Employee==");
+			System.out.println("1.\t Add new Employee");
+			System.out.println("2.\t Search Employee");
+			System.out.println("3.\t Back");
+			usrInput = Store.getNumber();
+			switch(usrInput){
+				case 1:
+					//TODO add new employee menu
+					break;
+				case 2:
+					//TODO search employee 
+					break;
+				case 3:
+					return;
+			}
+		}	
+	}
+	
+	
 	
 	
 	public Position getPosition() {
