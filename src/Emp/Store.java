@@ -16,12 +16,12 @@ public class Store {
 	public static void main(String[] args) {
 		DB.open();
 		Store store = new Store("Smliran's Store","1234");
-		store.showManu();
+		store.showMenu();
 		DB.close();
 	}
 
 	
-	public void showManu(){	
+	public void showMenu(){	
 		int userInput;
 		System.out.println("Welcome to "+name+"!");
 		login();
@@ -32,7 +32,10 @@ public class Store {
 			System.out.println("3.\t Exit");	
 			userInput = getNumber();
 			switch (userInput){
-			case 1:{			
+			case 1:
+				Employee.showMenu();
+				break;
+			case 2:{			
 				ResultSet rs = DB.executeQuery( "SELECT * FROM Employees;" );
 				while (DB.next(rs)) {
 					int id = DB.getInt(rs,"ID");
