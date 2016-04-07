@@ -1,7 +1,6 @@
 package Emp;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Scanner;
 import DB.DB;
 
@@ -14,12 +13,20 @@ public class Store {
 		this.password=password;
 	}
 	
+	public static void main(String[] args) {
+		DB.open();
+		Store store = new Store("Smliran's Store","1234");
+		store.showManu();
+		DB.close();
+	}
+
+	
 	public void showManu(){	
 		int userInput;
 		System.out.println("Welcome to "+name+"!");
 		login();
 		while (true){
-			System.out.println("Manu :");
+			System.out.println("Main Menu :");
 			System.out.println("1.\t Employees");
 			System.out.println("2.\t Employees");
 			System.out.println("3.\t Exit");	
@@ -50,7 +57,7 @@ public class Store {
 			System.out.println("Please Enter The password :");		
 			String password = sc.nextLine();		
 			if(password.equals(this.password)){
-				System.out.println("Great! log in ...");
+				System.out.println("Great! You logged in !!");
 				return;
 			}
 			System.out.println("Wrong password! , Please try again");		
@@ -78,12 +85,4 @@ public class Store {
 		}
 		return true;
 	}
-
-	public static void main(String[] args) {
-		DB.open();
-		Store store = new Store("Smliran's Store","1234");
-		store.showManu();
-		DB.close();
-	}
-
 }
