@@ -104,6 +104,8 @@ public class Employee {
 	
 	public static Employee searchEmployee(){
 		int userInput,select;
+		Scanner sc = new Scanner(System.in);
+		Employee[] arr;
 		while(true){
 			System.out.println("==Search Employee==");
 			System.out.println("1.\t Search By ID");
@@ -111,11 +113,17 @@ public class Employee {
 			System.out.println("3.\t Exit");	
 			userInput = Store.getNumber();			
 			switch (userInput){
-			case 1:		
+			case 1:{
+				arr=searchEmployee("ID",sc.nextLine());
+				select=  Store.selectFromMenu(arr);
+				return arr[select];
+				break;
+			}
 				
-				break;
 			case 2:		
-				break;
+				arr=searchEmployee("Name",sc.nextLine());
+				select=  Store.selectFromMenu(arr);
+				return arr[select];
 			case 3: //EXIT
 				return null;		
 			}	
