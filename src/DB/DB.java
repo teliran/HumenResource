@@ -67,14 +67,6 @@ public final class DB
 		}
 	}
 	
-	public static int getSize(ResultSet set){
-		try {
-			return set.getFetchSize();
-		} catch (SQLException e) {
-			return 0;
-		}
-	}
-	
 	public static void closeResult(ResultSet set){
 		try {
 			set.close();

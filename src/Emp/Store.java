@@ -107,14 +107,15 @@ public class Store {
 		int i;
 		int userNum;
 		Scanner sc = new Scanner(System.in);
-		for (i=1; i<=strArr.length; i++){
-			System.out.println(i+". "+ strArr[i-1].toString());
+		for (i=0; i<strArr.length; i++){
+			System.out.println((i+1)+". "+ strArr[i].toString());
 		}
 		while (true){
 			userNum = getNumber();
-			if(userNum<=0 && userNum>strArr.length)
-				System.out.println("Enter your choise in range(0 - " +strArr.length);
-			return userNum-1;
+			if(userNum<=0 || userNum>strArr.length)
+				System.out.println("Enter your choise in range(0 - " +strArr.length+")");
+			else
+				return userNum-1;
 		}
 	}
 }

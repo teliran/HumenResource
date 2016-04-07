@@ -1,6 +1,8 @@
 package Emp;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
 
 import DB.DB;
 
@@ -39,10 +41,10 @@ public class Employee {
 			usrInput = Store.getNumber();
 			switch(usrInput){
 				case 1:
-					//TODO add new employee menu
+					addEmployee();
 					break;
 				case 2:
-					//TODO search employee 
+					searchEmployee();
 					break;
 				case 3:
 					return;
@@ -58,9 +60,9 @@ public class Employee {
 		Scanner sc = new Scanner(System.in);
 		String name = sc.nextLine();
 		System.out.println("Enter Employee position:");
-		String[] posArr = new String[7];
-		int j = Store.selectFromMenu(posArr);
-		Position pos = Position.valueOf(posArr[j]);
+		Position[] posArr = Position.values();
+		int j = Store.selectFromMenu(Position.values());
+		Position pos = posArr[j];
 		System.out.println("Enter Employee Bank Number:(2 digits)");
 		int bNum = Store.getNumber();
 		System.out.println("Enter Employee Account Number:(5 digits)");
@@ -73,13 +75,9 @@ public class Employee {
 	}
 	
 	public String toString(){
-		String ans = "ID: " +getId()+ "Name: " +getName();
+		String ans = "ID: " +getId()+ " Name: " +getName();
 		return ans;
 	}
-	
-
-	
-	
 	
 	public Position getPosition() {
 		return pos;
@@ -127,12 +125,14 @@ public class Employee {
 			userInput = Store.getNumber();			
 			switch (userInput){
 			case 1:{
+				System.out.println("Please Enter ID:");
 				arr=searchEmployee("ID",sc.nextLine());
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
 			}
 				
 			case 2:		
+				System.out.println("Please Enter Name:");
 				arr=searchEmployee("Name",sc.nextLine());
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
@@ -145,7 +145,7 @@ public class Employee {
 	public static Employee[] searchEmployee(String type, String value){
 		ResultSet result = null;
 		if(type.equals("ID")){
-			result = DB.executeQuery("SELECT * FROM Employees WHERE ID ='"+value+"'");					
+			result = DB.executeQuery("SELECT * FROM Employees WHERE ID ="+value+";");	
 		}
 		else if(type.equals("Name")){
 			result = DB.executeQuery("SELECT * FROM Employees WHERE Name ='"+value+"'");		
@@ -154,15 +154,15 @@ public class Employee {
 	}
 	
 	public static Employee[] getEmployeeArr(ResultSet result){
-		int size = DB.getSize(result);	
-		Employee[] arr = new Employee[size];
-		for(int i=0 ; i<size; i++){
-			arr[i]= new Employee(0,DB.getInt(result, "ID"),DB.getString(result, "Name"),
+		Vector<Employee> vector = new Vector();
+		while(DB.next(result)){
+			vector.addElement( new Employee(0,DB.getInt(result, "ID"),DB.getString(result, "Name"),
 					Position.valueOf(DB.getString(result, "Position")),DB.getInt(result, "BankNumber"),
 					DB.getInt(result, "AccountNumber"),DB.getString(result, "StartDate"),
-					DB.getInt(result, "SalaryPerHour"));			
+					DB.getInt(result, "SalaryPerHour")));			
 		}
-		return arr;	
+		DB.closeResult(result);
+		return vector.toArray(new Employee[0]);
 	}
 	
 }
