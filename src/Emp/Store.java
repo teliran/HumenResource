@@ -114,7 +114,7 @@ public class Store {
 			userNum = getNumber();
 			if(userNum<=0 && userNum>strArr.length)
 				System.out.println("Enter your choise in range(0 - " +strArr.length);
-			return userNum;
+			return userNum-1;
 		}
 	}
 }

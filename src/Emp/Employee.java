@@ -51,13 +51,26 @@ public class Employee {
 		Scanner sc = new Scanner(System.in);
 		String name = sc.nextLine();
 		System.out.println("Enter Employee position:");
-		String pos = sc.nextLine();
-		
-		System.out.println("Enter Employee First and Last Name:");
-		String Name = sc.nextLine();
-		return null;
+		String[] posArr = new String[7];
+		int j = Store.selectFromMenu(posArr);
+		Position pos = Position.valueOf(posArr[j]);
+		System.out.println("Enter Employee Bank Number:(2 digits)");
+		int bNum = Store.getNumber();
+		System.out.println("Enter Employee Account Number:(5 digits)");
+		int accNum = Store.getNumber();		
+		System.out.println("Enter Employee Start Date:(dd/MM/yyyy)");
+		String stDate = sc.nextLine(); //TO-DO parse string to Date
+		System.out.println("Enter Employee payment per hour:(int)");
+		int salary = Store.getNumber();
+		return new Employee(id, name, pos, bNum, accNum, stDate, salary);	
 	}
 	
+	public String toString(){
+		String ans = "ID: " +getId()+ "Name: " +getName();
+		return ans;
+	}
+	
+
 	
 	
 	
