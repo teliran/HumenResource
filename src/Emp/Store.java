@@ -102,4 +102,19 @@ public class Store {
 			return stringToDate(sc.nextLine());
 		}
 	}
+	
+	public static int selectFromMenu(Object[] strArr){
+		int i;
+		int userNum;
+		Scanner sc = new Scanner(System.in);
+		for (i=1; i<=strArr.length; i++){
+			System.out.println(i+". "+ strArr[i-1].toString());
+		}
+		while (true){
+			userNum = getNumber();
+			if(userNum<=0 && userNum>strArr.length)
+				System.out.println("Enter your choise in range(0 - " +strArr.length);
+			return userNum;
+		}
+	}
 }
