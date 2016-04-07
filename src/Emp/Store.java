@@ -1,6 +1,9 @@
 package Emp;
 
 import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import DB.DB;
 
@@ -87,5 +90,16 @@ public class Store {
 			return false;
 		}
 		return true;
+	}
+	
+	public static Date stringToDate(String date) {
+		SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			return format.parse(date);
+		} catch (ParseException e) {
+			System.out.println("Wrong format please try again (dd/MM/yyyy):");
+			Scanner sc = new Scanner(System.in);
+			return stringToDate(sc.nextLine());
+		}
 	}
 }

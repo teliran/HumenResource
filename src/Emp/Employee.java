@@ -1,6 +1,6 @@
 package Emp;
 
-
+import java.util.Scanner;
 
 public class Employee { 
 	private int id;
@@ -9,16 +9,18 @@ public class Employee {
 	private int bankNumber;
 	private int accountNumber;
 	private String startDate;
+	private int salaryPerHour;
 	public static enum Position{hrManager, stockManager, storekeeper, 
 		cashier, driver, storeManager, shiftManager};
 		
-	public Employee(int id, String name, Position pos, int bankNumber,int accountNumber,String startDate){
+	public Employee(int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
 		this.id = id;
 		this.name = name;
 		this.pos = pos;
 		this.bankNumber = bankNumber;
 		this.accountNumber = accountNumber;
-		this.startDate = startDate;	
+		this.startDate = startDate;
+		this.salaryPerHour = salaryPerHour;
 	}
 	
 	public static void showMenu(){
@@ -40,6 +42,21 @@ public class Employee {
 					return;
 			}
 		}	
+	}
+	
+	public static Employee addEmployee(){
+		System.out.println("==Add New Employee==");
+		System.out.println("Enter Employee ID (9 digits):");
+		int id = Store.getNumber();
+		System.out.println("Enter Employee First and Last Name:");
+		Scanner sc = new Scanner(System.in);
+		String name = sc.nextLine();
+		System.out.println("Enter Employee position:");
+		String pos = sc.nextLine();
+		
+		System.out.println("Enter Employee First and Last Name:");
+		String Name = sc.nextLine();
+		return null;
 	}
 	
 	
