@@ -69,7 +69,7 @@ public class Employee {
 		String stDate = sc.nextLine(); //TO-DO parse string to Date
 		System.out.println("Enter Employee payment per hour:(int)");
 		int salary = Store.getNumber();
-		return new Employee(id, name, pos, bNum, accNum, stDate, salary);	
+		return new Employee(1, id, name, pos, bNum, accNum, stDate, salary);	
 	}
 	
 	public String toString(){
@@ -130,7 +130,6 @@ public class Employee {
 				arr=searchEmployee("ID",sc.nextLine());
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
-				break;
 			}
 				
 			case 2:		
