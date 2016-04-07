@@ -1,5 +1,8 @@
 package Emp;
+import java.sql.ResultSet;
 import java.util.Scanner;
+
+import DB.DB;
 
 public class Employee { 
 	private int id;
@@ -12,7 +15,7 @@ public class Employee {
 	public static enum Position{hrManager, stockManager, storekeeper, 
 		cashier, driver, storeManager, shiftManager};
 		
-	public Employee(int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
+	public Employee(int insert,int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
 		this.id = id;
 		this.name = name;
 		this.pos = pos;
@@ -20,6 +23,10 @@ public class Employee {
 		this.accountNumber = accountNumber;
 		this.startDate = startDate;
 		this.salaryPerHour = salaryPerHour;
+	}
+	
+	public Employee(int id){
+		this.id=id;
 	}
 	
 	public static void showMenu(){
@@ -89,8 +96,53 @@ public class Employee {
 	public void setAccountNumber(int accountNumber) {
 		this.accountNumber = accountNumber;
 	}
+
+	
 	public String getStartDate() {
 		return startDate;
+	}
+	
+	public static Employee searchEmployee(){
+		int userInput,select;
+		while(true){
+			System.out.println("==Search Employee==");
+			System.out.println("1.\t Search By ID");
+			System.out.println("2.\t Search By Name");
+			System.out.println("3.\t Exit");	
+			userInput = Store.getNumber();			
+			switch (userInput){
+			case 1:		
+				
+				break;
+			case 2:		
+				break;
+			case 3: //EXIT
+				return null;		
+			}	
+		}
+	}
+	
+	public static Employee[] searchEmployee(String type, String value){
+		ResultSet result = null;
+		if(type.equals("ID")){
+			result = DB.executeQuery("SELECT * FROM Employees WHERE ID ='"+value+"'");					
+		}
+		else if(type.equals("Name")){
+			result = DB.executeQuery("SELECT * FROM Employees WHERE Name ='"+value+"'");		
+		}		
+		return getEmployeeArr(result);
+	}
+	
+	public static Employee[] getEmployeeArr(ResultSet result){
+		int size = DB.getSize(result);	
+		Employee[] arr = new Employee[size];
+		for(int i=0 ; i<size; i++){
+			arr[i]= new Employee(0,DB.getInt(result, "ID"),DB.getString(result, "Name"),
+					Position.valueOf(DB.getString(result, "Position")),DB.getInt(result, "BankNumber"),
+					DB.getInt(result, "AccountNumber"),DB.getString(result, "StartDate"),
+					DB.getInt(result, "SalaryPerHour"));			
+		}
+		return arr;	
 	}
 	
 }
