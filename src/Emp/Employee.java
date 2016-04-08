@@ -15,7 +15,8 @@ public class Employee {
 	private int salaryPerHour;
 	public static enum Position{hrManager, stockManager, storekeeper, 
 		cashier, driver, storeManager, shiftManager};
-		
+	
+	//Construct	
 	public Employee(boolean insert,int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
 		this.id = id;
 		this.name = name;
@@ -31,6 +32,59 @@ public class Employee {
 		}
 	}
 	
+	//Getters AND Setters Methods
+	
+	public String toString(){
+		String ans = "ID: " +getId()+ " Name: " +getName();
+		return ans;
+	}	
+	public Position getPosition() {
+		return pos;
+	}	
+	public void setPosition(Position pos) {
+		 this.pos = pos;
+		 DB.executeUpdate("UPDATE Employees set Position = '"+pos+"' WHERE ID ="+id);
+	}	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+		DB.executeUpdate("UPDATE Employees set Name = '"+name+"' WHERE ID ="+id);
+	}
+	public int getId() {
+		return id;
+	}
+	public int getBankNumber() {
+		return bankNumber;
+	}
+	public void setBankNumber(int bankNumber) {
+		this.bankNumber = bankNumber;
+		DB.executeUpdate("UPDATE Employees set BankNumber = '"+bankNumber+"' WHERE ID ="+id);
+	}
+	public void setSalaryPerHour(int salary){
+		this.salaryPerHour=salary;
+		DB.executeUpdate("UPDATE Employees set SalaryPerHour = '"+salary+"' WHERE ID ="+id);
+	}
+	public int getSalaryPerHour(){
+		return salaryPerHour;
+	}
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(int accountNumber) {
+		this.accountNumber = accountNumber;
+		DB.executeUpdate("UPDATE Employees set AccountNumber = '"+accountNumber+"' WHERE ID ="+id);
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	
+	// Static Methods 
+	
+	/**
+	 * Show Welcome menu to employees screen
+	 */
 	public static void showMenu(){
 		int usrInput;
 		while(true){
@@ -52,6 +106,10 @@ public class Employee {
 		}	
 	}
 	
+	/**
+	 * Show Card menu to the selected Employee
+	 * @param emp The selected employee
+	 */
 	public static void showCard(Employee emp){
 		int usrInput;
 		Scanner sc = new Scanner(System.in);
@@ -98,6 +156,10 @@ public class Employee {
 		}	
 	}
 	
+	/**
+	 * Add new employee menu
+	 * @return object of the created employee
+	 */
 	public static Employee addEmployee(){
 		System.out.println("==Add New Employee==");
 		System.out.println("Enter Employee ID (9 digits):");
@@ -120,53 +182,10 @@ public class Employee {
 		return new Employee(true, id, name, pos, bNum, accNum, stDate, salary);	
 	}
 	
-	public String toString(){
-		String ans = "ID: " +getId()+ " Name: " +getName();
-		return ans;
-	}
-	
-	public Position getPosition() {
-		return pos;
-	}	
-	public void setPosition(Position pos) {
-		 this.pos = pos;
-		 DB.executeUpdate("UPDATE Employees set Position = '"+pos+"' WHERE ID ="+id);
-	}	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-		DB.executeUpdate("UPDATE Employees set Name = '"+name+"' WHERE ID ="+id);
-	}
-	public int getId() {
-		return id;
-	}
-	public int getBankNumber() {
-		return bankNumber;
-	}
-	public void setBankNumber(int bankNumber) {
-		this.bankNumber = bankNumber;
-		DB.executeUpdate("UPDATE Employees set BankNumber = '"+bankNumber+"' WHERE ID ="+id);
-	}
-	public void setSalaryPerHour(int salary){
-		this.salaryPerHour=salary;
-		DB.executeUpdate("UPDATE Employees set SalaryPerHour = '"+salary+"' WHERE ID ="+id);
-	}
-	public int getSalaryPerHour(){
-		return salaryPerHour;
-	}
-	public int getAccountNumber() {
-		return accountNumber;
-	}
-	public void setAccountNumber(int accountNumber) {
-		this.accountNumber = accountNumber;
-		DB.executeUpdate("UPDATE Employees set AccountNumber = '"+accountNumber+"' WHERE ID ="+id);
-	}
-	public String getStartDate() {
-		return startDate;
-	}
-	
+	/**
+	 * Open Search menu of employees
+	 * @return the chosen employee
+	 */
 	public static Employee searchEmployee(){
 		int userInput,select;
 		Scanner sc = new Scanner(System.in);
@@ -215,6 +234,12 @@ public class Employee {
 		}
 	}
 	
+	/**
+	 * Search Employee by selected type
+	 * @param type the type of search (ID,Name,All)
+	 * @param Parameter to Search
+	 * @return array of the Appropriate results
+	 */
 	public static Employee[] searchEmployee(String type, String value){
 		ResultSet result = null;
 		if(type.equals("ID")){
@@ -229,7 +254,12 @@ public class Employee {
 		return getEmployeeArr(result);
 	}
 	
-	public static Employee[] getEmployeeArr(ResultSet result){
+	/**
+	 * Create Employee array from ResultSet
+	 * @param result from what we build the array
+	 * @return Array of Employee
+	 */
+	private static Employee[] getEmployeeArr(ResultSet result){
 		Vector<Employee> vector = new Vector<Employee>();
 		while(DB.next(result)){
 			vector.addElement( new Employee(false,DB.getInt(result, "ID"),DB.getString(result, "Name"),
