@@ -1,6 +1,5 @@
 package Emp;
 import java.sql.ResultSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -17,7 +16,7 @@ public class Employee {
 	public static enum Position{hrManager, stockManager, storekeeper, 
 		cashier, driver, storeManager, shiftManager};
 		
-	public Employee(int insert,int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
+	public Employee(boolean insert,int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
 		this.id = id;
 		this.name = name;
 		this.pos = pos;
@@ -25,10 +24,11 @@ public class Employee {
 		this.accountNumber = accountNumber;
 		this.startDate = startDate;
 		this.salaryPerHour = salaryPerHour;
-	}
-	
-	public Employee(int id){
-		this.id=id;
+		if(insert){
+			String query = "INSERT INTO Employees (ID,Name,Position,StartDate,AccountNumber,BankNumber,SalaryPerHour) " +
+	                   "VALUES ("+id+", '"+name+"', '"+pos+"' ,'"+startDate+"',"+accountNumber+","+bankNumber+","+salaryPerHour+");";
+			DB.executeUpdate(query);
+		}
 	}
 	
 	public static void showMenu(){
@@ -41,12 +41,38 @@ public class Employee {
 			usrInput = Store.getNumber();
 			switch(usrInput){
 				case 1:
+					showCard(addEmployee());
+					break;
+				case 2:
+					showCard(searchEmployee());
+					break;
+				case 3:
+					return;
+			}
+		}	
+	}
+	
+	public static void showCard(Employee emp){
+		int usrInput;
+		while(true){
+			System.out.println("==Employee Card==");
+			System.out.println("== "+emp+" ==");
+			System.out.println("1.\t Edit Name");
+			System.out.println("2.\t Edit Position");
+			System.out.println("3.\t Edit Account Number");
+			System.out.println("4.\t Edit Bank Number");
+			System.out.println("5.\t Edit Salary Per Hour");
+			System.out.println("6.\t Delete Employee");
+			System.out.println("7.\t Back");
+			usrInput = Store.getNumber();
+			switch(usrInput){
+				case 1:
 					addEmployee();
 					break;
 				case 2:
 					searchEmployee();
 					break;
-				case 3:
+				case 7:
 					return;
 			}
 		}	
@@ -71,7 +97,7 @@ public class Employee {
 		String stDate = sc.nextLine(); //TO-DO parse string to Date
 		System.out.println("Enter Employee payment per hour:(int)");
 		int salary = Store.getNumber();
-		return new Employee(1, id, name, pos, bNum, accNum, stDate, salary);	
+		return new Employee(true, id, name, pos, bNum, accNum, stDate, salary);	
 	}
 	
 	public String toString(){
@@ -108,7 +134,6 @@ public class Employee {
 		this.accountNumber = accountNumber;
 	}
 
-	
 	public String getStartDate() {
 		return startDate;
 	}
@@ -121,7 +146,8 @@ public class Employee {
 			System.out.println("==Search Employee==");
 			System.out.println("1.\t Search By ID");
 			System.out.println("2.\t Search By Name");
-			System.out.println("3.\t Exit");	
+			System.out.println("3.\t Show All Employees");
+			System.out.println("4.\t Exit");	
 			userInput = Store.getNumber();			
 			switch (userInput){
 			case 1:{
@@ -136,7 +162,13 @@ public class Employee {
 				arr=searchEmployee("Name",sc.nextLine());
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
-			case 3: //EXIT
+				
+			case 3:
+				arr=searchEmployee("All","");
+				select=  Store.selectFromMenu(arr);
+				return arr[select];
+				
+			case 4: //EXIT
 				return null;		
 			}	
 		}
@@ -149,14 +181,17 @@ public class Employee {
 		}
 		else if(type.equals("Name")){
 			result = DB.executeQuery("SELECT * FROM Employees WHERE Name ='"+value+"'");		
-		}		
+		}
+		else if(type.equals("All")){
+			result = DB.executeQuery("SELECT * FROM Employees");		
+		}	
 		return getEmployeeArr(result);
 	}
 	
 	public static Employee[] getEmployeeArr(ResultSet result){
-		Vector<Employee> vector = new Vector();
+		Vector<Employee> vector = new Vector<Employee>();
 		while(DB.next(result)){
-			vector.addElement( new Employee(0,DB.getInt(result, "ID"),DB.getString(result, "Name"),
+			vector.addElement( new Employee(false,DB.getInt(result, "ID"),DB.getString(result, "Name"),
 					Position.valueOf(DB.getString(result, "Position")),DB.getInt(result, "BankNumber"),
 					DB.getInt(result, "AccountNumber"),DB.getString(result, "StartDate"),
 					DB.getInt(result, "SalaryPerHour")));			

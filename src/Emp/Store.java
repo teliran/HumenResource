@@ -23,7 +23,6 @@ public class Store {
 		DB.close();
 	}
 
-	
 	public void showMenu(){	
 		int userInput;
 		System.out.println("Welcome to "+name+"!");
@@ -31,23 +30,14 @@ public class Store {
 		while (true){
 			System.out.println("Main Menu :");
 			System.out.println("1.\t Employees");
-			System.out.println("2.\t Employees");
+			System.out.println("2.\t Shifts");
 			System.out.println("3.\t Exit");	
 			userInput = getNumber();
 			switch (userInput){
 			case 1:
 				Employee.showMenu();
 				break;
-			case 2:{			
-				ResultSet rs = DB.executeQuery( "SELECT * FROM Employees;" );
-				while (DB.next(rs)) {
-					int id = DB.getInt(rs,"ID");
-					String  name = DB.getString(rs,"Name");
-					System.out.println( "ID = " + id );
-					System.out.println( "NAME = " + name );
-					System.out.println();
-				}
-				DB.closeResult(rs);	
+			case 2:
 				break;
 			}
 			case 3: //EXIT
