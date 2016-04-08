@@ -39,7 +39,6 @@ public class Store {
 				break;
 			case 2:
 				break;
-			}
 			case 3: //EXIT
 				return;
 			
