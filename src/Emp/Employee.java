@@ -1,5 +1,7 @@
 package Emp;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -11,13 +13,13 @@ public class Employee {
 	private Position pos;
 	private int bankNumber;
 	private int accountNumber;
-	private String startDate;
+	private Date startDate;
 	private int salaryPerHour;
 	public static enum Position{hrManager, stockManager, storekeeper, 
 		cashier, driver, storeManager, shiftManager};
 	
 	//Construct	
-	public Employee(boolean insert,int id, String name, Position pos, int bankNumber,int accountNumber,String startDate,int salaryPerHour){
+	public Employee(boolean insert,int id, String name, Position pos, int bankNumber,int accountNumber,Date startDate,int salaryPerHour){
 		this.id = id;
 		this.name = name;
 		this.pos = pos;
@@ -26,8 +28,10 @@ public class Employee {
 		this.startDate = startDate;
 		this.salaryPerHour = salaryPerHour;
 		if(insert){
+			SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+			String date =format.format(startDate); 
 			String query = "INSERT INTO Employees (ID,Name,Position,StartDate,AccountNumber,BankNumber,SalaryPerHour) " +
-	                   "VALUES ("+id+", '"+name+"', '"+pos+"' ,'"+startDate+"',"+accountNumber+","+bankNumber+","+salaryPerHour+");";
+	                   "VALUES ("+id+", '"+name+"', '"+pos+"' ,'"+date+"',"+accountNumber+","+bankNumber+","+salaryPerHour+");";
 			DB.executeUpdate(query);
 		}
 	}
@@ -76,7 +80,7 @@ public class Employee {
 		this.accountNumber = accountNumber;
 		DB.executeUpdate("UPDATE Employees set AccountNumber = '"+accountNumber+"' WHERE ID ="+id);
 	}
-	public String getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 	
@@ -180,7 +184,7 @@ public class Employee {
 		System.out.println("Enter Employee Account Number:(5 digits)");
 		int accNum = Store.getNumber();		
 		System.out.println("Enter Employee Start Date:(dd/MM/yyyy)");
-		String stDate = sc.nextLine(); //TO-DO parse string to Date
+		Date stDate = Store.stringToDate(sc.nextLine()); 
 		System.out.println("Enter Employee payment per hour:(int)");
 		int salary = Store.getNumber();
 		return new Employee(true, id, name, pos, bNum, accNum, stDate, salary);	
@@ -268,7 +272,7 @@ public class Employee {
 		while(DB.next(result)){
 			vector.addElement( new Employee(false,DB.getInt(result, "ID"),DB.getString(result, "Name"),
 					Position.valueOf(DB.getString(result, "Position")),DB.getInt(result, "BankNumber"),
-					DB.getInt(result, "AccountNumber"),DB.getString(result, "StartDate"),
+					DB.getInt(result, "AccountNumber"),Store.stringToDate(DB.getString(result, "StartDate")),
 					DB.getInt(result, "SalaryPerHour")));			
 		}
 		DB.closeResult(result);
