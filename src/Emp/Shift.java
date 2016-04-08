@@ -7,17 +7,16 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Shift {
-	public enum ShiftPart{morning, evening};
+	public static enum ShiftPart{morning, evening};
 	public ShiftPart shifts;
 	private Date date;
-	private HashMap positions;
+	private HashMap<Employee.Position, Integer> positions;
 	
 	
 	public Shift(ShiftPart shifts ,Date date){
 		this.shifts=shifts;
 		this.date = date;
-		positions = new HashMap<>();
-		
+		positions = new HashMap<>();	
 	}
 	
 	public String getDay(){

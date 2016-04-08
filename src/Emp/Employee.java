@@ -54,24 +54,44 @@ public class Employee {
 	
 	public static void showCard(Employee emp){
 		int usrInput;
+		Scanner sc = new Scanner(System.in);
 		while(true){
 			System.out.println("==Employee Card==");
 			System.out.println("== "+emp+" ==");
-			System.out.println("1.\t Edit Name");
-			System.out.println("2.\t Edit Position");
-			System.out.println("3.\t Edit Account Number");
-			System.out.println("4.\t Edit Bank Number");
-			System.out.println("5.\t Edit Salary Per Hour");
+			System.out.println("1.\t Edit Name (Current : "+emp.getName()+")");
+			System.out.println("2.\t Edit Position (Current : "+emp.getPosition()+")");
+			System.out.println("3.\t Edit Account Number (Current : "+emp.getAccountNumber()+")");
+			System.out.println("4.\t Edit Bank Number (Current : "+emp.getBankNumber()+")");
+			System.out.println("5.\t Edit Salary Per Hour (Current : "+emp.getSalaryPerHour()+")");
 			System.out.println("6.\t Delete Employee");
 			System.out.println("7.\t Back");
 			usrInput = Store.getNumber();
 			switch(usrInput){
-				case 1:
-					addEmployee();
+				case 1: //edit name
+					System.out.println("Please enter the new name:");
+					emp.setName(sc.nextLine());
 					break;
-				case 2:
-					searchEmployee();
+				case 2: //Edit Position
+					System.out.println("Please select the new Position:");
+					Position[] posArr = Position.values();
+					int j = Store.selectFromMenu(Position.values());
+					emp.setPosition(posArr[j]);
 					break;
+				case 3: // Edit account number
+					System.out.println("Please enter the new Account Number:");
+					emp.setAccountNumber(Store.getNumber());
+					break;
+				case 4: // Edit bank number
+					System.out.println("Please enter the new Bank Number:");
+					emp.setBankNumber(Store.getNumber());
+					break;
+				case 5: // Edit Salary per hour
+					System.out.println("Please enter the new Salary:");
+					emp.setSalaryPerHour(Store.getNumber());
+					break;
+				case 6: // delete employee
+					DB.executeUpdate("DELETE FROM Employees WHERE ID ="+emp.getId());
+					return;
 				case 7:
 					return;
 			}
@@ -107,16 +127,17 @@ public class Employee {
 	
 	public Position getPosition() {
 		return pos;
-	}
+	}	
 	public void setPosition(Position pos) {
 		 this.pos = pos;
-	}
-	
+		 DB.executeUpdate("UPDATE Employees set Position = '"+pos+"' WHERE ID ="+id);
+	}	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
+		DB.executeUpdate("UPDATE Employees set Name = '"+name+"' WHERE ID ="+id);
 	}
 	public int getId() {
 		return id;
@@ -126,14 +147,22 @@ public class Employee {
 	}
 	public void setBankNumber(int bankNumber) {
 		this.bankNumber = bankNumber;
+		DB.executeUpdate("UPDATE Employees set BankNumber = '"+bankNumber+"' WHERE ID ="+id);
+	}
+	public void setSalaryPerHour(int salary){
+		this.salaryPerHour=salary;
+		DB.executeUpdate("UPDATE Employees set SalaryPerHour = '"+salary+"' WHERE ID ="+id);
+	}
+	public int getSalaryPerHour(){
+		return salaryPerHour;
 	}
 	public int getAccountNumber() {
 		return accountNumber;
 	}
 	public void setAccountNumber(int accountNumber) {
 		this.accountNumber = accountNumber;
+		DB.executeUpdate("UPDATE Employees set AccountNumber = '"+accountNumber+"' WHERE ID ="+id);
 	}
-
 	public String getStartDate() {
 		return startDate;
 	}
@@ -153,6 +182,10 @@ public class Employee {
 			case 1:{
 				System.out.println("Please Enter ID:");
 				arr=searchEmployee("ID",sc.nextLine());
+				if(arr.length == 0){ // if there no results
+					System.out.println("No Result to show");
+					break;
+				}
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
 			}
@@ -160,11 +193,19 @@ public class Employee {
 			case 2:		
 				System.out.println("Please Enter Name:");
 				arr=searchEmployee("Name",sc.nextLine());
+				if(arr.length == 0){ // if there no results
+					System.out.println("No Result to show");
+					break;
+				}
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
 				
 			case 3:
 				arr=searchEmployee("All","");
+				if(arr.length == 0){ // if there no results
+					System.out.println("No Result to show");
+					break;
+				}
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
 				
@@ -177,10 +218,10 @@ public class Employee {
 	public static Employee[] searchEmployee(String type, String value){
 		ResultSet result = null;
 		if(type.equals("ID")){
-			result = DB.executeQuery("SELECT * FROM Employees WHERE ID ="+value+";");	
+			result = DB.executeQuery("SELECT * FROM Employees WHERE ID LIKE '%"+value+"%';");	
 		}
 		else if(type.equals("Name")){
-			result = DB.executeQuery("SELECT * FROM Employees WHERE Name ='"+value+"'");		
+			result = DB.executeQuery("SELECT * FROM Employees WHERE Name LIKE '%"+value+"%'");		
 		}
 		else if(type.equals("All")){
 			result = DB.executeQuery("SELECT * FROM Employees");		

@@ -1,6 +1,5 @@
 package Emp;
 
-import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,8 +39,7 @@ public class Store {
 			case 2:
 				break;
 			case 3: //EXIT
-				return;
-			
+				return;			
 			}
 		}	
 	}
@@ -95,14 +93,13 @@ public class Store {
 	public static int selectFromMenu(Object[] strArr){
 		int i;
 		int userNum;
-		Scanner sc = new Scanner(System.in);
 		for (i=0; i<strArr.length; i++){
 			System.out.println((i+1)+". "+ strArr[i].toString());
 		}
 		while (true){
 			userNum = getNumber();
 			if(userNum<=0 || userNum>strArr.length)
-				System.out.println("Enter your choise in range(0 - " +strArr.length+")");
+				System.out.println("Enter your choise in range(1 - " +strArr.length+")");
 			else
 				return userNum-1;
 		}

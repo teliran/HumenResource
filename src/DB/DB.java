@@ -15,7 +15,7 @@ public final class DB
 	public static ResultSet executeQuery(String query){
 		try {
 			return db.executeQuery(query);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println("Problem with reading from database");
 			e.printStackTrace();
 			System.exit(0);
