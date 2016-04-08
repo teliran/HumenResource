@@ -164,6 +164,10 @@ public class Employee {
 		System.out.println("==Add New Employee==");
 		System.out.println("Enter Employee ID (9 digits):");
 		int id = Store.getNumber();
+		while(searchEmployee("ID",id+"").length != 0){ // validate valid ID
+			System.out.println("The enterd ID is not available, Please Try Again");
+			id = Store.getNumber();
+		}
 		System.out.println("Enter Employee First and Last Name:");
 		Scanner sc = new Scanner(System.in);
 		String name = sc.nextLine();
