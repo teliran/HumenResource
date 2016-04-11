@@ -93,6 +93,7 @@ public class Store {
 	public static int selectFromMenu(Object[] strArr){
 		int i;
 		int userNum;
+		System.out.println("Enter your choise in range(1 - " +strArr.length+")");
 		for (i=0; i<strArr.length; i++){
 			System.out.println((i+1)+". "+ strArr[i].toString());
 		}

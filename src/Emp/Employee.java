@@ -203,7 +203,8 @@ public class Employee {
 			System.out.println("1.\t Search By ID");
 			System.out.println("2.\t Search By Name");
 			System.out.println("3.\t Show All Employees");
-			System.out.println("4.\t Exit");	
+			System.out.println("4.\t Search By Position");
+			System.out.println("5.\t Exit");	
 			userInput = Store.getNumber();			
 			switch (userInput){
 			case 1:{
@@ -235,8 +236,19 @@ public class Employee {
 				}
 				select=  Store.selectFromMenu(arr);
 				return arr[select];
+			case 4:
+				System.out.println("Please Select employee position:");
+				Position posArr[] = Position.values();
+				int selection = Store.selectFromMenu(posArr);
+				arr=searchEmployee("Position",posArr[selection]+"");
+				if(arr.length == 0){ // if there no results
+					System.out.println("No Result to show");
+					break;
+				}
+				select=  Store.selectFromMenu(arr);
+				return arr[select];
 				
-			case 4: //EXIT
+			case 5: //EXIT
 				return null;		
 			}	
 		}
@@ -258,7 +270,10 @@ public class Employee {
 		}
 		else if(type.equals("All")){
 			result = DB.executeQuery("SELECT * FROM Employees");		
-		}	
+		}
+		else if(type.equals("Position")){
+			result = DB.executeQuery("SELECT * FROM Employees WHERE Position = '"+value+"'");
+		}
 		return getEmployeeArr(result);
 	}
 	
