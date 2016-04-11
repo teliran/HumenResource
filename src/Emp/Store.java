@@ -2,18 +2,25 @@ package Emp;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.TimeZone;
+
+import javax.print.attribute.standard.DateTimeAtCompleted;
+
 import DB.DB;
+import sun.util.resources.cldr.af.CalendarData_af_NA;
 
 public class Store {
 	private String name;
 	private String password;
 	public static enum Week{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday};
-	
+	public static Date currentDate  = stringToDate("13/04/2016");	
 	public Store(String name, String password){
 		this.name=name;
 		this.password=password;
+		
 	}
 	
 	public static void main(String[] args) {
@@ -21,6 +28,22 @@ public class Store {
 		Store store = new Store("Smliran's Store","1234");
 		store.showMenu();
 		DB.close();
+	}
+	
+	/**
+	 * get the date of the first day in date
+	 * @param date the insert date
+	 * @param current true - if current week , false - next week
+	 * @return the fixed date
+	 */
+	public static Date getFirstDayOfWeek(Date date,boolean current){
+		int day = date.getDay() +1;
+		Calendar c = Calendar.getInstance();    
+		c.setTime(date);
+		c.add(Calendar.DATE, -(day-1));
+		if(!current)
+			c.add(Calendar.DATE, 7);
+		return c.getTime();	
 	}
 
 	public void showMenu(){	
@@ -38,6 +61,7 @@ public class Store {
 				Employee.showMenu();
 				break;
 			case 2:
+				Shift.showMenu();
 				break;
 			case 3: //EXIT
 				return;			
@@ -95,11 +119,17 @@ public class Store {
 		SimpleDateFormat format=new SimpleDateFormat("HH:mm");
 		try {
 			return format.parse(hour);
-		} catch (ParseException e) {
+		}catch (ParseException e) {
 			System.out.println("Wrong format please try again (HH:mm 24Hr):");
 			Scanner sc = new Scanner(System.in);
 			return stringToHour(sc.nextLine());
 		}
+	}
+		
+		
+	public static String setFormat(Date date){
+		SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+		return format.format(date);	
 	}
 	
 	public static int selectFromMenu(Object[] strArr){
