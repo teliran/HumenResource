@@ -12,11 +12,65 @@ public class Shift {
 	private Date date;
 	private HashMap<Employee.Position, Integer> positions;
 	
-	
 	public Shift(ShiftPart shifts ,Date date){
 		this.shifts=shifts;
 		this.date = date;
 		positions = new HashMap<>();	
+	}
+	
+	public static void showMenu(){
+		int usrInput;
+		while(true){
+			System.out.println("==Shifts==");
+			System.out.println("1.\t Show Shifts History");
+			System.out.println("2.\t Make Shift For Next Week");
+			System.out.println("3.\t Back");
+			usrInput = Store.getNumber();
+			switch(usrInput){
+				case 1:
+					Shift select = history();
+					if(select == null)
+						break;
+					
+					break;
+				case 2:
+					
+					break;
+				case 3:
+					return;
+			}
+		}	
+	}
+	
+	public static Shift history(){
+		int usrInput;
+		while(true){
+			System.out.println("==Shifts History==");
+			System.out.println("1.\t Show Current Week Shift");
+			System.out.println("2.\t Search Shift By Date");
+			System.out.println("3.\t Back");
+			usrInput = Store.getNumber();
+			switch(usrInput){
+				case 1:
+					break;
+				case 2:
+					
+					break;
+				case 3:
+					return null;
+			}
+		}
+	}
+	
+	public static Shift searchByDate(Date date){
+		
+		
+		return null;
+		
+	}
+	
+	public static void showCard(Shift shift){
+		
 	}
 	
 	public String getDay(){
