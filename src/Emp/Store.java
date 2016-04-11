@@ -9,6 +9,7 @@ import DB.DB;
 public class Store {
 	private String name;
 	private String password;
+	public static enum Week{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday};
 	
 	public Store(String name, String password){
 		this.name=name;
@@ -90,6 +91,17 @@ public class Store {
 		}
 	}
 	
+	public static Date stringToHour(String hour) {
+		SimpleDateFormat format=new SimpleDateFormat("HH:mm");
+		try {
+			return format.parse(hour);
+		} catch (ParseException e) {
+			System.out.println("Wrong format please try again (HH:mm 24Hr):");
+			Scanner sc = new Scanner(System.in);
+			return stringToHour(sc.nextLine());
+		}
+	}
+	
 	public static int selectFromMenu(Object[] strArr){
 		int i;
 		int userNum;
@@ -105,4 +117,6 @@ public class Store {
 				return userNum-1;
 		}
 	}
+	
+	
 }
