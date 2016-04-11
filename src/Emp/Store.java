@@ -15,7 +15,7 @@ import sun.util.resources.cldr.af.CalendarData_af_NA;
 public class Store {
 	private String name;
 	private String password;
-	public static Date currentDate  = stringToDate("12/04/16");
+	public static Date currentDate  = stringToDate("13/04/2016");
 	
 	public Store(String name, String password){
 		this.name=name;
@@ -37,15 +37,12 @@ public class Store {
 	 * @return the fixed date
 	 */
 	public static Date getFirstDayOfWeek(Date date,boolean current){
-		int day = date.getDay() +3;
-		if(day >= 8)
-			day -=7;
+		int day = date.getDay() +1;
 		Calendar c = Calendar.getInstance();    
 		c.setTime(date);
 		c.add(Calendar.DATE, -(day-1));
 		if(!current)
 			c.add(Calendar.DATE, 7);
-		
 		return c.getTime();	
 	}
 
@@ -116,6 +113,11 @@ public class Store {
 			Scanner sc = new Scanner(System.in);
 			return stringToDate(sc.nextLine());
 		}
+	}
+	
+	public static String setFormat(Date date){
+		SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+		return format.format(date);	
 	}
 	
 	public static int selectFromMenu(Object[] strArr){
