@@ -95,7 +95,7 @@ public class Constraint {
 		System.out.println("Add New Constraint");
 		System.out.println("Enter Employee ID (9 digits):");
 		int id = Store.getNumber();
-		while(Employee.searchEmployee("ID",id+"").length != 0){ // validate valid ID
+		while(Employee.searchEmployee("ID",id+"").length == 0){ // validate valid ID
 			System.out.println("The enterd ID is not available, Please Try Again");
 			id = Store.getNumber();
 		}

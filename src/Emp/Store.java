@@ -54,7 +54,8 @@ public class Store {
 			System.out.println("Main Menu :");
 			System.out.println("1.\t Employees");
 			System.out.println("2.\t Shifts");
-			System.out.println("3.\t Exit");	
+			System.out.println("3.\t Constraint");		
+			System.out.println("4.\t Exit");	
 			userInput = getNumber();
 			switch (userInput){
 			case 1:
@@ -63,7 +64,10 @@ public class Store {
 			case 2:
 				Shift.showMenu();
 				break;
-			case 3: //EXIT
+			case 3:
+				Constraint.showMenu();
+				break;
+			case 4: //EXIT
 				return;			
 			}
 		}	

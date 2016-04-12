@@ -4,22 +4,25 @@ import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Vector;
 
 import DB.DB;
 
 public class Shift {
 	public static enum ShiftPart{morning, evening};
-	public ShiftPart shifts;
+	public ShiftPart shift;
 	private Date date;
-	private HashMap<Employee.Position, Integer> positions;
+	private HashMap<Employee.Position, Vector<Employee>> positions;
 	
-	public Shift(boolean insert,ShiftPart shifts ,Date date){
-		this.shifts=shifts;
+	public Shift(boolean insert,ShiftPart shift ,Date date,HashMap<Employee.Position, Vector<Employee>> pos){
+		this.shift=shift;
 		this.date = date;
-		positions = new HashMap<>();	
+		positions = pos;
 	}
 	
 	public static void showMenu(){
@@ -35,12 +38,58 @@ public class Shift {
 					history();					
 					break;
 				case 2:
-					
+					addShift();
 					break;
 				case 3:
 					return;
 			}
 		}	
+	}
+	
+	public static void addShift(){
+		int usrInput;
+		Calendar c = Calendar.getInstance();    
+		Date firstDay = Store.getFirstDayOfWeek(Store.currentDate, false);
+		while(true){
+			System.out.println("==Create Shift==");
+			System.out.println("1.\t Edit Amount Employees on days");
+			System.out.println("2.\t Make Shift!");
+			System.out.println("3.\t Back");
+			usrInput = Store.getNumber();
+			switch(usrInput){
+				case 1:
+					System.out.println("Please Select Day To Update Amount Of Employee That Needed");
+					String days[] = new String[11];
+					for(int i=0; i<11; i++){
+						c.setTime(firstDay);
+						c.add(Calendar.DATE,i/2);
+						days[i]= Store.setFormat(c.getTime())+" At Morning";
+						i++;
+						if(i != 11) // in Friday there are only morning shift
+							days[i]= Store.setFormat(c.getTime())+" At Evening";
+					}
+					int ans = Store.selectFromMenu(days);
+					c.setTime(firstDay);
+					c.add(Calendar.DATE,ans/2);
+					ShiftPart shift = ans%2==0 ? ShiftPart.morning : ShiftPart.evening;
+					amountDay(c.getTime(),shift);				
+					break;
+				case 2:
+					makeShift(firstDay);
+					break;
+				case 3:
+					return;
+			}
+		}
+				
+	}
+	
+	public static void amountDay(Date date, ShiftPart shift){
+		
+	}
+	
+	public static void makeShift(Date date){
+		
 	}
 	
 	public static void history(){
@@ -55,16 +104,14 @@ public class Shift {
 			usrInput = Store.getNumber();
 			switch(usrInput){
 				case 1:
-					shift = searchByDate(Store.currentDate);
-					if(shift == null){
-						System.out.println("No Result to show");
-						return;
-					}
-					showCard(shift);
+					showWeek(Store.getFirstDayOfWeek(Store.currentDate, true));					
 					break;
 				case 2:
 					System.out.println("Please Enter Date to Search (DD/MM/YYYY)");
-					shift = searchByDate(Store.stringToDate(sc.nextLine()));					
+					Shift.ShiftPart parts [] = Shift.ShiftPart.values();
+					Date ans =Store.stringToDate(sc.nextLine());
+					System.out.println("Please Select Shift");
+					shift = searchByDate(ans,parts[Store.selectFromMenu(parts)]);					
 					if(shift == null){
 						System.out.println("No Result to show");
 						return;
@@ -76,20 +123,49 @@ public class Shift {
 		}
 	}
 	
-	public static Shift searchByDate(Date date){
+	public static void showWeek(Date date){
+		Calendar c = Calendar.getInstance();    	
+		for(int i=0; i<6; i++){ // Sunday to Friday
+			c.setTime(date);
+			c.add(Calendar.DATE,i);
+			showCard(searchByDate(c.getTime(), ShiftPart.morning));
+			if(i != 5) // in Friday there are no evening shift
+				showCard(searchByDate(c.getTime(), ShiftPart.evening));
+		}	
+	}
+	
+	public static Shift searchByDate(Date date ,ShiftPart shift){
 		ResultSet result = null;
-		date = Store.getFirstDayOfWeek(date, true);
-		result = DB.executeQuery("SELECT * FROM Shifts WHERE Shift_Date = '"+Store.setFormat(date)+"'");
-		if(!DB.next(result))
-			return null;
-		System.out.println(DB.getString(result, "Shift"));
-		return new Shift(false,ShiftPart.valueOf(DB.getString(result, "Shift")),date);	
+		Employee emp = null;
+		Vector<Integer> vector = new Vector();
+		HashMap<Employee.Position, Vector<Employee>> positions = new HashMap<>();	
+		result = DB.executeQuery("SELECT * FROM Scheduling WHERE date = '"+Store.setFormat(date)+"' AND Shift ='"+shift+"'");
+		while(DB.next(result)){ // create vector of id
+			vector.addElement(DB.getInt(result, "ID"));
+		}
+		DB.closeResult(result);
+		for(Integer id : vector){
+			emp = Employee.searchEmployee("ID",id+"")[0];
+			if(!positions.containsKey(emp.getPosition()))
+				positions.put(emp.getPosition(), new Vector<>());
+			positions.get(emp.getPosition()).add(emp);
+		}	
+		return new Shift(false,shift,date, positions);	
 	}
 	
 	public static void showCard(Shift shift){
-		System.out.println(shift.getDay());
-		System.out.println(shift.getDate());
-		System.out.println(shift.getShifts());
+		System.out.print("***"+shift.getDay()+" ");
+		System.out.print(Store.setFormat(shift.getDate())+" ");
+		System.out.println("At "+shift.getShift()+"***");
+		Iterator it = shift.positions.entrySet().iterator();
+		while(it.hasNext()){
+			HashMap.Entry pair = (HashMap.Entry)it.next();
+			System.out.println(pair.getKey()+"s:("+((Vector<Employee>)pair.getValue()).size()+")");
+			System.out.print("\t");
+			for(Employee emp : (Vector<Employee>)pair.getValue())
+				System.out.print(emp+"; ");
+			System.out.println();
+		}
 	}
 	
 	public String getDay(){
@@ -97,11 +173,11 @@ public class Shift {
 		 String finalDay=format2.format(date);
 		 return finalDay;
 	}
-	public void setShifts(ShiftPart shifts){
-		this.shifts=shifts;
+	public void setShift(ShiftPart shifts){
+		this.shift=shifts;
 	}
-	public ShiftPart getShifts(){
-		return shifts;
+	public ShiftPart getShift(){
+		return shift;
 	}
 	public Date getDate() {
 		return date;
@@ -111,8 +187,6 @@ public class Shift {
 		try {
 			this.date=format.parse(date);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	

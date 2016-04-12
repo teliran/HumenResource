@@ -15,7 +15,7 @@ public class Employee {
 	private int accountNumber;
 	private Date startDate;
 	private int salaryPerHour;
-	public static enum Position{hrManager, stockManager, storekeeper, 
+	public static enum Position{hrManager, stockManager, storeKeeper, 
 		cashier, driver, storeManager, shiftManager};
 	
 	//Construct	
