@@ -76,7 +76,7 @@ public class Shift {
 					break;
 				case 2:
 					makeShift(firstDay);
-					break;
+					return;
 				case 3:
 					return;
 			}
