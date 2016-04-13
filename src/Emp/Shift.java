@@ -25,6 +25,16 @@ public class Shift {
 		positions = pos;
 	}
 	
+	public boolean hasAmount(Employee.Position pos){
+		return positions.containsKey(pos);
+	}
+	public int getAmount(Employee.Position pos){
+		int ans=0;
+		if(positions.containsKey(pos))
+			ans = positions.get(pos).size();
+		return ans ;
+	}
+	
 	public static void showMenu(){
 		int usrInput;
 		while(true){
@@ -72,7 +82,7 @@ public class Shift {
 					c.setTime(firstDay);
 					c.add(Calendar.DATE,ans/2);
 					ShiftPart shift = ans%2==0 ? ShiftPart.morning : ShiftPart.evening;
-					amountDay(c.getTime(),shift);				
+					amountDay(searchByDate(c.getTime(),shift));				
 					break;
 				case 2:
 					makeShift(firstDay);
@@ -84,12 +94,45 @@ public class Shift {
 				
 	}
 	
-	public static void amountDay(Date date, ShiftPart shift){
+	public static int getAmountLastWeek(Employee.Position pos, Date date, ShiftPart shift){
+		int ans=0;
+		Calendar c = Calendar.getInstance();    	
+		c.setTime(date);
+		c.add(Calendar.DATE,-7);
+		Shift s = searchByDate(c.getTime(), shift);
+		if(s!= null)
+			ans=s.getAmount(pos);
+		return ans;
+	}
+	
+	public static void amountDay(Shift shift){
+		int usrInput;
+		Employee.Position[] positions = Employee.Position.values();
+		HashMap<Employee.Position,Integer> map = new HashMap<>();
+		for( Employee.Position pos : positions)
+			if(shift.hasAmount(pos))
+				map.put(pos, shift.getAmount(pos));
+			else{
+				map.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
+			}				
+		while(true){
+			System.out.println("===Workers Per Shift "+Store.setFormat(shift.date)+" At "+shift.shift+"===");
+			
+			String[] str = new String[positions.length];
+			for(int i =0; i<str.length; i++)
+				str[i] = positions[i] +" (Current :"+map.get(positions[i])+")";		
+		}
 		
 	}
 	
 	public static void makeShift(Date date){
-		
+		HashMap<Employee, int[]> map = new HashMap<>();
+		Employee[] empArr = Employee.searchEmployee("ALL", "");
+		for(Employee emp : empArr){
+			int[] arr = new int[2]; // 0 - shift in week , 1- number of Constraint
+			arr[1] = Constraint.getNumberOfConstraint(emp);
+			map.put(emp, arr);
+		}
 	}
 	
 	public static void history(){
