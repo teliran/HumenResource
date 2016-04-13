@@ -1,14 +1,18 @@
 package Emp;
 
 import java.sql.ResultSet;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Vector;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
 import DB.DB;
 import Emp.Employee.Position;
+import Emp.Shift.ShiftPart;
 
 public class Constraint {
 	private int id;
@@ -189,6 +193,50 @@ public class Constraint {
 		Employee[] myEmp = Employee.searchEmployee("ID", getId()+"");
 		String ans = "ID: " +getId()+ "\n   Name: "+myEmp[0].getName()+"\n   Day: " +getDay()+ "\n   Start Hour: " +Store.setHour(getStartHour())+ "\n   End Hour: " +Store.setHour(getEndHour())+"\n";
 		return ans;
+	}
+	
+	public static int getNumerOfConstraint(Employee emp){
+		int ans=0;
+		for(Store.Week day: Store.Week.values()){
+			Constraint[] dayCon;
+			dayCon = searchConstraint("Day",day+"");
+			for(int i=0; i<=dayCon.length; i++){
+				if(dayCon[i].getId()==emp.getId()){
+					ans+= shiftsInCon(dayCon[i]);
+				}
+			}
+		}		
+		return ans;
+		
+	}
+	
+	public static int shiftsInCon(Constraint empCon){
+		int ans=0;
+		Date morning =Store.stringToHour("15:00");
+		if(empCon.getStartHour().before(morning)){
+			ans++;
+		}
+		if(empCon.getEndHour().after(morning)){
+			ans++;
+		}
+		return ans;
+	}
+	
+	public static boolean isAvailable(Employee emp, Date day, Shift.ShiftPart shift){
+		boolean ans=false;
+		DateFormat format=new SimpleDateFormat("EEEE"); 
+		String finalDay=format.format(day);
+		Constraint[] empCon = searchConstraint("Day", finalDay);
+		Date morning =Store.stringToHour("15:00");
+		if (shift.equals(ShiftPart.morning)){
+			if (empCon[0].getStartHour().before(morning));
+				return true;	
+		}
+		else if (empCon[0].getStartHour().after(morning)){
+				return true;
+		}
+		return ans;
+		
 	}
 
 	//Getters AND Setters Methods
