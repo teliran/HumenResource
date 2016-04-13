@@ -62,8 +62,8 @@ public class Constraint {
 			String name = Employee.searchEmployee("ID", con.getId()+"")[0].getName();
 			System.out.println("== "+name+" ==");
 			System.out.println("1.\t Edit Day (Current : "+con.getDay()+")");
-			System.out.println("2.\t Edit Start Hour (Current : "+Store.stringToHour(con.startHour+"")+")");
-			System.out.println("3.\t Edit End Hour (Current : "+Store.stringToHour(con.endHour+"")+")");
+			System.out.println("2.\t Edit Start Hour (Current : "+con.startHour+")");
+			System.out.println("3.\t Edit End Hour (Current : "+con.endHour+")");
 			System.out.println("4.\t Delete Constraint");
 			System.out.println("5.\t Back");
 			usrInput = Store.getNumber();
@@ -133,7 +133,7 @@ public class Constraint {
 			System.out.println("==Search Constraint==");
 			System.out.println("1.\t Search By ID");
 			System.out.println("2.\t Search By Day");
-			System.out.println("3.\t Show All Employees");
+			System.out.println("3.\t Show All Constraints");
 			System.out.println("4.\t Exit");
 			userInput = Store.getNumber();			
 			switch (userInput){
