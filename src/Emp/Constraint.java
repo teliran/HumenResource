@@ -62,8 +62,8 @@ public class Constraint {
 			String name = Employee.searchEmployee("ID", con.getId()+"")[0].getName();
 			System.out.println("== "+name+" ==");
 			System.out.println("1.\t Edit Day (Current : "+con.getDay()+")");
-			System.out.println("2.\t Edit Start Hour (Current : "+con.startHour+")");
-			System.out.println("3.\t Edit End Hour (Current : "+con.endHour+")");
+			System.out.println("2.\t Edit Start Hour (Current : "+Store.setHour(con.startHour)+")");
+			System.out.println("3.\t Edit End Hour (Current : "+Store.setHour(con.endHour)+")");
 			System.out.println("4.\t Delete Constraint");
 			System.out.println("5.\t Back");
 			usrInput = Store.getNumber();
@@ -186,7 +186,7 @@ public class Constraint {
 	
 	public String toString(){
 		Employee[] myEmp = Employee.searchEmployee("ID", getId()+"");
-		String ans = "ID: " +getId()+ " Name: "+myEmp[0].getName()+" Day: " +getDay()+ " Start Hour: " +getStartHour()+ "End Hour: " +getEndHour();
+		String ans = "ID: " +getId()+ "\n   Name: "+myEmp[0].getName()+"\n   Day: " +getDay()+ "\n   Start Hour: " +Store.setHour(getStartHour())+ "\n   End Hour: " +Store.setHour(getEndHour());
 		return ans;
 	}
 
