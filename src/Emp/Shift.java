@@ -26,12 +26,21 @@ public class Shift {
 	}
 	
 	public boolean hasAmount(Employee.Position pos){
-		return positions.containsKey(pos);
+		boolean ans= false;
+		ResultSet result = DB.executeQuery("SELECT * FROM Shifts WHERE Shift_Date = '"+Store.setFormat(date)+"' "
+				+ "AND Shift ='"+shift+"' AND Position ='"+pos+"'");
+		while(DB.next(result)){ // create vector of id
+			ans=true;
+		}
+		return ans;
 	}
 	public int getAmount(Employee.Position pos){
 		int ans=0;
-		if(positions.containsKey(pos))
-			ans = positions.get(pos).size();
+		ResultSet result = DB.executeQuery("SELECT * FROM Shifts WHERE Shift_Date = '"+Store.setFormat(date)+"' "
+				+ "AND Shift ='"+shift+"' AND Position ='"+pos+"'");
+		while(DB.next(result)){ // create vector of id
+			ans=DB.getInt(result, "Amount");
+		}
 		return ans ;
 	}
 	
@@ -105,8 +114,21 @@ public class Shift {
 		return ans;
 	}
 	
+	public void setAmount(Employee.Position pos,int amount){
+		if(!hasAmount(pos)){
+			String query = "INSERT INTO Shifts (Shift_Date,Shift,Position,Amount) " +
+	                   "VALUES ('"+Store.setFormat(date)+"', '"+shift+"', '"+pos+"' ,'"+amount+"');";
+			DB.executeUpdate(query);
+		}
+		else{
+			DB.executeUpdate("UPDATE Shifts set Amount = '"+amount+"' WHERE Shift_Date ='"+Store.setFormat(date)+"' AND "
+					+ "Shift='"+shift+"' AND Position = '"+pos+"'");
+			
+		}
+		positions.get(pos);
+	}
+	
 	public static void amountDay(Shift shift){
-		int usrInput;
 		Employee.Position[] positions = Employee.Position.values();
 		HashMap<Employee.Position,Integer> map = new HashMap<>();
 		for( Employee.Position pos : positions)
@@ -118,11 +140,18 @@ public class Shift {
 		while(true){
 			System.out.println("===Workers Per Shift "+Store.setFormat(shift.date)+" At "+shift.shift+"===");
 			
-			String[] str = new String[positions.length];
-			for(int i =0; i<str.length; i++)
-				str[i] = positions[i] +" (Current :"+map.get(positions[i])+")";		
-			Store.selectFromMenu(str);
-			return;
+			String[] str = new String[positions.length+1];
+			int i;
+			for(i =0; i<positions.length; i++)
+				str[i] = positions[i] +" (Current :"+map.get(positions[i])+")";
+			str[i]="Return Back";
+			int ans = Store.selectFromMenu(str);
+			if(ans == i)
+				return;
+			System.out.println("Please Enter The New Amount:");
+			int number =Store.getNumber();
+			shift.setAmount(positions[ans],number );
+			map.put(positions[ans], number);
 		}
 		
 	}
