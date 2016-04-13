@@ -18,7 +18,7 @@ public class Constraint {
 	
 	
 	public Constraint(boolean insert, int id, Store.Week day, Date startHour,Date endHour){
-		this.setId(id);
+		this.id = id;
 		this.day = day;
 		this.startHour = startHour;
 		this.endHour = endHour;
@@ -62,8 +62,8 @@ public class Constraint {
 			String name = Employee.searchEmployee("ID", con.getId()+"")[0].getName();
 			System.out.println("== "+name+" ==");
 			System.out.println("1.\t Edit Day (Current : "+con.getDay()+")");
-			System.out.println("2.\t Edit Start Hour (Current : "+con.startHour+")");
-			System.out.println("3.\t Edit End Hour (Current : "+con.getEndHour()+")");
+			System.out.println("2.\t Edit Start Hour (Current : "+Store.stringToHour(con.startHour+"")+")");
+			System.out.println("3.\t Edit End Hour (Current : "+Store.stringToHour(con.endHour+"")+")");
 			System.out.println("4.\t Delete Constraint");
 			System.out.println("5.\t Back");
 			usrInput = Store.getNumber();
@@ -133,7 +133,8 @@ public class Constraint {
 			System.out.println("==Search Constraint==");
 			System.out.println("1.\t Search By ID");
 			System.out.println("2.\t Search By Day");
-			System.out.println("3.\t Exit");
+			System.out.println("3.\t Show All Employees");
+			System.out.println("4.\t Exit");
 			userInput = Store.getNumber();			
 			switch (userInput){
 				case 1:{
@@ -159,6 +160,12 @@ public class Constraint {
 					return arr[select];
 				}
 				case 3:
+					arr=searchConstraint("All", "");
+					if(arr.length == 0){ // if there no results
+						System.out.println("No Result to show");
+						break;
+					}
+				case 4:
 					return null;
 			}
 		}
@@ -174,14 +181,22 @@ public class Constraint {
 		DB.closeResult(result);
 		return vector.toArray(new Constraint[0]);
 	}
+	
+	public String toString(){
+		Employee[] myEmp = Employee.searchEmployee("ID", getId()+"");
+		String ans = "ID: " +getId()+ "Name: "+myEmp[0].getName()+" Day: " +getDay()+ " Start Hour: " +getStartHour()+ "End Hour: " +getEndHour();
+		return ans;
+	}	
 
-
+	//Getters AND Setters Methods
+	
 	public Store.Week getDay() {
 		return day;
 	}
 	
 	public void setDay(Store.Week day){
 		this.day = day;
+		DB.executeUpdate("UPDATE Constraints set Day = '"+day+"' WHERE ID ="+id);
 	}
 
 	public Date getStartHour() {
@@ -191,6 +206,7 @@ public class Constraint {
 
 	public void setStartHour(Date startHour) {
 		this.startHour = startHour;
+		DB.executeUpdate("UPDATE Constraints set Start = '"+startHour+"' WHERE ID ="+id);
 	}
 
 	public Date getEndHour() {
@@ -199,18 +215,13 @@ public class Constraint {
 
 	public void setEndHour(Date endHour) {
 		this.endHour = endHour;
+		DB.executeUpdate("UPDATE Constraints set End = '"+endHour+"' WHERE ID ="+id);
 	}
 
 
 	public int getId() {
 		return id;
 	}
-
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 
 }
 
