@@ -96,22 +96,20 @@ public class Constraint {
 	
 	public static Constraint addConstraint(){
 		System.out.println("Add New Constraint");
-		System.out.println("Enter Employee ID (9 digits):");
-		int id = Store.getNumber();
-		while(Employee.searchEmployee("ID",id+"").length == 0){ // validate valid ID
-			System.out.println("The enterd ID is not available, Please Try Again");
-			id = Store.getNumber();
+		Employee myEmp = Employee.searchEmployee();
+		if (myEmp == null){
+			return null;
 		}
 		System.out.println("Enter Day Constraint:");
 		Store.Week[] dayArr = Store.Week.values();
 		int j = Store.selectFromMenu(dayArr);
 		Store.Week day = dayArr[j];
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Please enter Start Hour (HH:mm 24Hr):");
+		System.out.println("Please enter Constraint Start Hour (HH:mm 24Hr):");
 		Date start = Store.stringToHour(sc.nextLine());
-		System.out.println("Please enter End Hour (HH:mm 24Hr):");
+		System.out.println("Please enter Constraint End Hour (HH:mm 24Hr):");
 		Date end = Store.stringToHour(sc.nextLine());
-		return new Constraint(true, id, day, start, end);
+		return new Constraint(true, myEmp.getId(), day, start, end);
 	}
 
 	public static Constraint[] searchConstraint(String type, String value) {
@@ -189,7 +187,7 @@ public class Constraint {
 	
 	public String toString(){
 		Employee[] myEmp = Employee.searchEmployee("ID", getId()+"");
-		String ans = "ID: " +getId()+ "\n   Name: "+myEmp[0].getName()+"\n   Day: " +getDay()+ "\n   Start Hour: " +Store.setHour(getStartHour())+ "\n   End Hour: " +Store.setHour(getEndHour());
+		String ans = "ID: " +getId()+ "\n   Name: "+myEmp[0].getName()+"\n   Day: " +getDay()+ "\n   Start Hour: " +Store.setHour(getStartHour())+ "\n   End Hour: " +Store.setHour(getEndHour())+"\n";
 		return ans;
 	}
 
