@@ -55,6 +55,9 @@ public class Constraint {
 	}
 
 	public static void showCard(Constraint con){
+		if (con == null){
+			return;
+		}
 		int usrInput;
 		Scanner sc = new Scanner(System.in);
 		while(true){
@@ -208,7 +211,7 @@ public class Constraint {
 
 	public void setStartHour(Date startHour) {
 		this.startHour = startHour;
-		DB.executeUpdate("UPDATE Constraints set Start = '"+startHour+"' WHERE ID ="+id);
+		DB.executeUpdate("UPDATE Constraints set Start = '"+Store.setHour(startHour)+"' WHERE ID ="+id);
 	}
 
 	public Date getEndHour() {
@@ -217,7 +220,7 @@ public class Constraint {
 
 	public void setEndHour(Date endHour) {
 		this.endHour = endHour;
-		DB.executeUpdate("UPDATE Constraints set End = '"+endHour+"' WHERE ID ="+id);
+		DB.executeUpdate("UPDATE Constraints set End = '"+Store.setHour(endHour)+"' WHERE ID ="+id);
 	}
 
 
