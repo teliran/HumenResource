@@ -165,6 +165,8 @@ public class Constraint {
 						System.out.println("No Result to show");
 						break;
 					}
+					select= Store.selectFromMenu(arr);
+					return arr[select];
 				case 4:
 					return null;
 			}
@@ -184,9 +186,9 @@ public class Constraint {
 	
 	public String toString(){
 		Employee[] myEmp = Employee.searchEmployee("ID", getId()+"");
-		String ans = "ID: " +getId()+ "Name: "+myEmp[0].getName()+" Day: " +getDay()+ " Start Hour: " +getStartHour()+ "End Hour: " +getEndHour();
+		String ans = "ID: " +getId()+ " Name: "+myEmp[0].getName()+" Day: " +getDay()+ " Start Hour: " +getStartHour()+ "End Hour: " +getEndHour();
 		return ans;
-	}	
+	}
 
 	//Getters AND Setters Methods
 	
