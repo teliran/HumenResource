@@ -195,7 +195,7 @@ public class Constraint {
 		return ans;
 	}
 	
-	public static int getNumerOfConstraint(Employee emp){
+	public static int getNumberOfConstraint(Employee emp){
 		int ans=0;
 		for(Store.Week day: Store.Week.values()){
 			Constraint[] dayCon;
