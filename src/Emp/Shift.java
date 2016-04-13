@@ -121,6 +121,8 @@ public class Shift {
 			String[] str = new String[positions.length];
 			for(int i =0; i<str.length; i++)
 				str[i] = positions[i] +" (Current :"+map.get(positions[i])+")";		
+			Store.selectFromMenu(str);
+			return;
 		}
 		
 	}
