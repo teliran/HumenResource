@@ -136,6 +136,11 @@ public class Store {
 		return format.format(date);	
 	}
 	
+	public static String setHour(Date date){
+		SimpleDateFormat format=new SimpleDateFormat("HH:mm");
+		return format.format(date);	
+	}
+	
 	public static int selectFromMenu(Object[] strArr){
 		int i;
 		int userNum;
