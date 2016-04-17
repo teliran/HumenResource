@@ -29,6 +29,8 @@ public class Shift {
 		positions = pos;
 	}
 	
+	
+	
 	public boolean hasAmount(Employee.Position pos){
 		boolean ans= false;
 		ResultSet result = DB.executeQuery("SELECT * FROM Shifts WHERE Shift_Date = '"+Store.setFormat(date)+"' "
@@ -192,9 +194,19 @@ public class Shift {
 		}
 		Iterator<?> it = posMap.entrySet().iterator();
 		while(it.hasNext()){
-			HashMap.Entry pair = (HashMap.Entry)it.next();
+			HashMap.Entry<Employee.Position, Integer> pair = (HashMap.Entry)it.next();
+			if((int)pair.getValue() == 0)
+				continue ;
 			Employee[] empArr = Employee.searchEmployee("Position",pair.getKey()+"");
 			sortArr(empArr,map);
+			System.out.println( "nedded "+pair.getValue()+" "+pair.getKey());
+			for(int i=0; (int)pair.getValue() > 0 &&  i<empArr.length; i++){
+				if(Constraint.isAvailable(empArr[i], date, shiftPart)){
+					System.out.println(empArr[i]+" date "+Store.setFormat(date)+" shift "+shiftPart);
+					pair.setValue((int)pair.getValue()-1);  //decrease needed amount 
+					map.get(empArr[i])[0]++;
+				}
+			}
 		}
 		
 	}
@@ -203,9 +215,8 @@ public class Shift {
 		List<Employee> list = new ArrayList<>();
 		for(Employee emp : empArr)
 			list.add(emp);
-		 Collections.sort(list, new Comparator<Object>() {
-		        public int compare(Object o1, Object o2) {
-		        	int[] arr = map.get((Employee)o1);
+		 list.sort(new Comparator<Employee>() {
+		        public int compare(Employee o1, Employee o2) {
 		            Integer x1 = map.get((Employee)o1)[0];
 		            Integer x2 = map.get((Employee)o2)[0];
 		            int sComp = x1.compareTo(x2);
@@ -218,6 +229,7 @@ public class Shift {
 		               return y1.compareTo(y2);
 		            }
 		    }});
+
 		 for(int i=0; i<empArr.length; i++){
 			 empArr[i] = list.get(i);
 		 }

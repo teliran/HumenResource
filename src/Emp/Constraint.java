@@ -90,7 +90,7 @@ public class Constraint {
 					con.setEndHour(Store.stringToHour(sc.nextLine()));
 					break;
 				case 4:
-					DB.executeQuery("DELETE FROM Constraints WHERE ID="+con.getId()+"");
+					DB.executeUpdate("DELETE FROM Constraints WHERE ID="+con.getId()+" AND Day='"+con.getDay()+"'");
 					break;
 				case 5:
 					return;
@@ -241,6 +241,8 @@ public class Constraint {
 		String finalDay=format.format(day);
 		Constraint[] empCon = searchConstraint("Day", finalDay);
 		Date morning =Store.stringToHour("15:00");
+		if(empCon.length == 0)
+			return true;
 		if (shift.equals(ShiftPart.morning)){
 			if (empCon[0].getStartHour().before(morning));
 				return true;	

@@ -84,6 +84,20 @@ public class Employee {
 		return startDate;
 	}
 	
+	public boolean equals(Object o){
+		try{
+			Employee emp = (Employee)o ;
+			return emp.getId() == this.id;
+		}
+		catch(Exception e){
+			return false;
+		}
+	}
+	
+	public int hashCode(){
+		return id;
+	}
+	
 	// Static Methods 
 	
 	/**
