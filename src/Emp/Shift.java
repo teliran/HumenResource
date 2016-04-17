@@ -4,10 +4,14 @@ import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -138,8 +142,7 @@ public class Shift {
 				map.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
 			}				
 		while(true){
-			System.out.println("===Workers Per Shift "+Store.setFormat(shift.date)+" At "+shift.shift+"===");
-			
+			System.out.println("===Workers Per Shift "+Store.setFormat(shift.date)+" At "+shift.shift+"===");			
 			String[] str = new String[positions.length+1];
 			int i;
 			for(i =0; i<positions.length; i++)
@@ -157,13 +160,67 @@ public class Shift {
 	}
 	
 	public static void makeShift(Date date){
+		// Init
+		Calendar c = Calendar.getInstance(); 
 		HashMap<Employee, int[]> map = new HashMap<>();
-		Employee[] empArr = Employee.searchEmployee("ALL", "");
+		Employee[] empArr = Employee.searchEmployee("All", "");
 		for(Employee emp : empArr){
 			int[] arr = new int[2]; // 0 - shift in week , 1- number of Constraint
 			arr[1] = Constraint.getNumberOfConstraint(emp);
 			map.put(emp, arr);
 		}
+		//finish Init	
+		// run over the dates
+		for(int i =0; i<6; i++){
+			c.setTime(date);
+			c.add(Calendar.DATE,i);
+			makeShift(c.getTime(),ShiftPart.morning,map);
+			if(i != 5)
+				makeShift(c.getTime(),ShiftPart.evening,map);
+		}
+	}
+	
+	private static void makeShift(Date date , ShiftPart shiftPart , HashMap<Employee, int[]> map){
+		Employee.Position[] positions = Employee.Position.values();
+		HashMap<Employee.Position,Integer> posMap = new HashMap<>(); // position and number that needed
+		Shift shift = searchByDate(date,shiftPart);
+		for( Employee.Position pos : positions){
+			if(shift.hasAmount(pos))
+				posMap.put(pos, shift.getAmount(pos));
+			else
+				posMap.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
+		}
+		Iterator<?> it = posMap.entrySet().iterator();
+		while(it.hasNext()){
+			HashMap.Entry pair = (HashMap.Entry)it.next();
+			Employee[] empArr = Employee.searchEmployee("Position",pair.getKey()+"");
+			sortArr(empArr,map);
+		}
+		
+	}
+	
+	private static void sortArr(Employee[] empArr, HashMap<Employee, int[]> map){
+		List<Employee> list = new ArrayList<>();
+		for(Employee emp : empArr)
+			list.add(emp);
+		 Collections.sort(list, new Comparator<Object>() {
+		        public int compare(Object o1, Object o2) {
+		        	int[] arr = map.get((Employee)o1);
+		            Integer x1 = map.get((Employee)o1)[0];
+		            Integer x2 = map.get((Employee)o2)[0];
+		            int sComp = x1.compareTo(x2);
+
+		            if (sComp != 0) {
+		               return sComp;
+		            } else {
+		            	Integer y1 = map.get((Employee)o1)[1];
+			            Integer y2 = map.get((Employee)o2)[1];
+		               return y1.compareTo(y2);
+		            }
+		    }});
+		 for(int i=0; i<empArr.length; i++){
+			 empArr[i] = list.get(i);
+		 }
 	}
 	
 	public static void history(){
@@ -211,7 +268,7 @@ public class Shift {
 	public static Shift searchByDate(Date date ,ShiftPart shift){
 		ResultSet result = null;
 		Employee emp = null;
-		Vector<Integer> vector = new Vector();
+		Vector<Integer> vector = new Vector<Integer>();
 		HashMap<Employee.Position, Vector<Employee>> positions = new HashMap<>();	
 		result = DB.executeQuery("SELECT * FROM Scheduling WHERE date = '"+Store.setFormat(date)+"' AND Shift ='"+shift+"'");
 		while(DB.next(result)){ // create vector of id
@@ -231,7 +288,7 @@ public class Shift {
 		System.out.print("***"+shift.getDay()+" ");
 		System.out.print(Store.setFormat(shift.getDate())+" ");
 		System.out.println("At "+shift.getShift()+"***");
-		Iterator it = shift.positions.entrySet().iterator();
+		Iterator<?> it = shift.positions.entrySet().iterator();
 		while(it.hasNext()){
 			HashMap.Entry pair = (HashMap.Entry)it.next();
 			System.out.println(pair.getKey()+"s:("+((Vector<Employee>)pair.getValue()).size()+")");

@@ -200,7 +200,7 @@ public class Constraint {
 		for(Store.Week day: Store.Week.values()){
 			Constraint[] dayCon;
 			dayCon = searchConstraint("Day",day+"");
-			for(int i=0; i<=dayCon.length; i++){
+			for(int i=0; i<dayCon.length; i++){
 				if(dayCon[i].getId()==emp.getId()){
 					ans+= shiftsInCon(dayCon[i]);
 				}
