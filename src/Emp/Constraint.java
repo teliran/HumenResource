@@ -194,7 +194,10 @@ public class Constraint {
 		String ans = "ID: " +getId()+ "\n   Name: "+myEmp[0].getName()+"\n   Day: " +getDay()+ "\n   Start Hour: " +Store.setHour(getStartHour())+ "\n   End Hour: " +Store.setHour(getEndHour())+"\n";
 		return ans;
 	}
-	
+	/*
+	 * @param employee
+	 * return the employees constraints amount
+	 */
 	public static int getNumberOfConstraint(Employee emp){
 		int ans=0;
 		for(Store.Week day: Store.Week.values()){
@@ -209,7 +212,13 @@ public class Constraint {
 		return ans;
 		
 	}
-	
+	/*
+	 * @param empCon constraint of specific employee
+	 * return the employees constraint in shifts
+	 * 0-No constraints
+	 * 1- Morning OR Evening Shift
+	 * 2- Morning AND Evening Shift
+	 */
 	public static int shiftsInCon(Constraint empCon){
 		int ans=0;
 		Date morning =Store.stringToHour("15:00");
@@ -222,6 +231,10 @@ public class Constraint {
 		return ans;
 	}
 	
+	/*
+	 * 
+	 * return the employees Availability in specific day and shift
+	 */
 	public static boolean isAvailable(Employee emp, Date day, Shift.ShiftPart shift){
 		boolean ans=false;
 		DateFormat format=new SimpleDateFormat("EEEE"); 
