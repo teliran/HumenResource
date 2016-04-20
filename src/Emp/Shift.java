@@ -72,11 +72,51 @@ public class Shift {
 		}	
 	}
 	
+	public static boolean isShiftForNextWeek(){
+		ResultSet result = DB.executeQuery("SELECT * FROM Scheduling WHERE date = '"+Store.setFormat(Store.getFirstDayOfWeek(Store.currentDate, false))+"'");
+		if(DB.next(result)){ // create vector of id
+			DB.closeResult(result);
+			return true;
+		}
+		DB.closeResult(result);
+		return false;	
+	}
+	
+	public static void hasShiftNextWeek(){
+		int usrInput;
+		while(true){
+			System.out.println("==You Already Have Shift To The Next Week==");
+			System.out.println("1.\t Cancel Schedule ");
+			System.out.println("2.\t Show Schedule");
+			System.out.println("3.\t Back");
+			usrInput = Store.getNumber();
+			switch(usrInput){
+				case 1:{
+					Calendar c = Calendar.getInstance();
+					for(int i =0; i<6; i++){
+						c.setTime(Store.getFirstDayOfWeek(Store.currentDate, false));
+						c.add(Calendar.DATE,i);
+						DB.executeUpdate("DELETE FROM Scheduling WHERE Date ="+Store.setFormat(c.getTime()));
+					}				
+					return;				
+				}					
+				case 2:
+					showWeek(Store.getFirstDayOfWeek(Store.currentDate, false));
+					break;
+				case 3:
+					return;
+			}
+		}		
+	}
+	
 	public static void addShift(){
 		int usrInput;
 		Calendar c = Calendar.getInstance();    
 		Date firstDay = Store.getFirstDayOfWeek(Store.currentDate, false);
-		
+		if(isShiftForNextWeek()){
+			hasShiftNextWeek();
+			return;	
+		}				
 		while(true){
 			System.out.println("==Create Shift==");
 			System.out.println("1.\t Edit Amount Employees on days");
@@ -384,8 +424,4 @@ public class Shift {
 		}
 	}
 	
-	
-	
-	
-
 }
