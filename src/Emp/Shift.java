@@ -219,14 +219,14 @@ public class Shift {
 		        public int compare(Employee o1, Employee o2) {
 		            Integer x1 = map.get((Employee)o1)[0];
 		            Integer x2 = map.get((Employee)o2)[0];
-		            int sComp = x1.compareTo(x2);
+		            int sComp = x1.compareTo(x2); // the number of shift is from low to high
 
 		            if (sComp != 0) {
 		               return sComp;
 		            } else {
 		            	Integer y1 = map.get((Employee)o1)[1];
 			            Integer y2 = map.get((Employee)o2)[1];
-		               return y1.compareTo(y2);
+		               return y2.compareTo(y1); // the number of constraint is from high to low
 		            }
 		    }});
 
