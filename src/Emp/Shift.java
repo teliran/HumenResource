@@ -75,6 +75,7 @@ public class Shift {
 		int usrInput;
 		Calendar c = Calendar.getInstance();    
 		Date firstDay = Store.getFirstDayOfWeek(Store.currentDate, false);
+		
 		while(true){
 			System.out.println("==Create Shift==");
 			System.out.println("1.\t Edit Amount Employees on days");
@@ -138,7 +139,9 @@ public class Shift {
 		Employee.Position[] positions = Employee.Position.values();
 		HashMap<Employee.Position,Integer> map = new HashMap<>();
 		for( Employee.Position pos : positions)
-			if(shift.hasAmount(pos))
+			if(pos.equals(Employee.Position.shiftManager))
+				map.put(pos,1);
+			else if(shift.hasAmount(pos))
 				map.put(pos, shift.getAmount(pos));
 			else{
 				map.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
@@ -149,10 +152,16 @@ public class Shift {
 			int i;
 			for(i =0; i<positions.length; i++)
 				str[i] = positions[i] +" (Current :"+map.get(positions[i])+")";
+			
+
 			str[i]="Return Back";
 			int ans = Store.selectFromMenu(str);
 			if(ans == i)
 				return;
+			if(positions[ans].equals(Employee.Position.shiftManager)){
+				System.out.println("You must have 1 Shift Manager on a shift!");
+				continue;
+			}
 			System.out.println("Please Enter The New Amount:");
 			int number =Store.getNumber();
 			shift.setAmount(positions[ans],number );
@@ -187,7 +196,9 @@ public class Shift {
 		HashMap<Employee.Position,Integer> posMap = new HashMap<>(); // position and number that needed
 		Shift shift = searchByDate(date,shiftPart);
 		for( Employee.Position pos : positions){
-			if(shift.hasAmount(pos))
+			if(pos.equals(Employee.Position.shiftManager))
+				posMap.put(pos,1);
+			else if(shift.hasAmount(pos))
 				posMap.put(pos, shift.getAmount(pos));
 			else
 				posMap.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
