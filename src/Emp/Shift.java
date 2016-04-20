@@ -96,8 +96,9 @@ public class Shift {
 					for(int i =0; i<6; i++){
 						c.setTime(Store.getFirstDayOfWeek(Store.currentDate, false));
 						c.add(Calendar.DATE,i);
-						DB.executeUpdate("DELETE FROM Scheduling WHERE Date ="+Store.setFormat(c.getTime()));
-					}				
+						DB.executeUpdate("DELETE FROM Scheduling WHERE Date ='"+Store.setFormat(c.getTime())+"'");
+					}		
+					System.out.println("Cancel Complete");
 					return;				
 				}					
 				case 2:
