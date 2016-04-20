@@ -236,21 +236,25 @@ public class Constraint {
 	 * return the employees Availability in specific day and shift
 	 */
 	public static boolean isAvailable(Employee emp, Date day, Shift.ShiftPart shift){
-		boolean ans=false;
 		DateFormat format=new SimpleDateFormat("EEEE"); 
 		String finalDay=format.format(day);
 		Constraint[] empCon = searchConstraint("Day", finalDay);
+		Vector<Constraint> vec = new Vector<>();
+		for(Constraint cons : empCon)
+			if(cons.id== emp.getId())
+				vec.addElement(cons);
+		empCon = (Constraint[]) vec.toArray(new Constraint[0]);
 		Date morning =Store.stringToHour("15:00");
 		if(empCon.length == 0)
 			return true;
 		if (shift.equals(ShiftPart.morning)){
 			if (empCon[0].getStartHour().before(morning));
-				return true;	
+				return false;	
 		}
 		else if (empCon[0].getStartHour().after(morning)){
-				return true;
+				return false ;
 		}
-		return ans;
+		return true;
 		
 	}
 

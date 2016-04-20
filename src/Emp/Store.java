@@ -16,7 +16,7 @@ public class Store {
 	private String name;
 	private String password;
 	public static enum Week{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday};
-	public static Date currentDate  = stringToDate("13/04/2016");	
+	public static Date currentDate  = stringToDate("17/04/2016");	
 	
 	
 	public Store(String name, String password){

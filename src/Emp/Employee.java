@@ -39,7 +39,7 @@ public class Employee {
 	//Getters AND Setters Methods
 	
 	public String toString(){
-		String ans = "ID: " +getId()+ " Name: " +getName();
+		String ans = "ID: " +getId()+ " Name: " +getName()+" Position: "+pos;
 		return ans;
 	}	
 	public Position getPosition() {

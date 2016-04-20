@@ -16,6 +16,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import DB.DB;
+import Emp.Employee.Position;
 
 public class Shift {
 	public static enum ShiftPart{morning, evening};
@@ -172,6 +173,7 @@ public class Shift {
 	
 	public static void makeShift(Date date){
 		// Init
+		Shift temp = null;
 		Calendar c = Calendar.getInstance(); 
 		HashMap<Employee, int[]> map = new HashMap<>();
 		Employee[] empArr = Employee.searchEmployee("All", "");
@@ -180,18 +182,49 @@ public class Shift {
 			arr[1] = Constraint.getNumberOfConstraint(emp);
 			map.put(emp, arr);
 		}
+		int current = 0;
+		Shift[] shiftArr = new Shift[11];
 		//finish Init	
 		// run over the dates
 		for(int i =0; i<6; i++){
 			c.setTime(date);
 			c.add(Calendar.DATE,i);
-			makeShift(c.getTime(),ShiftPart.morning,map);
-			if(i != 5)
-				makeShift(c.getTime(),ShiftPart.evening,map);
+			temp =makeShift(c.getTime(),ShiftPart.morning,map);
+			if(temp == null)
+				return;
+			shiftArr[current] = temp;
+			current++;
+			
+			if(i != 5){
+				temp = makeShift(c.getTime(),ShiftPart.evening,map);
+				if(temp == null)
+					return;
+				shiftArr[current] = temp;
+				current++;
+			}			
 		}
+		System.out.println("Build Complete!");
+		insertToDb(shiftArr);
+		
 	}
 	
-	private static void makeShift(Date date , ShiftPart shiftPart , HashMap<Employee, int[]> map){
+	private static void insertToDb(Shift[] arr){
+		for(Shift s : arr){
+			Iterator<?> it = s.positions.entrySet().iterator();
+			while(it.hasNext()){
+				HashMap.Entry<Employee.Position, Vector<Employee>> pair = (HashMap.Entry)it.next();
+				for(Employee emp : pair.getValue()){
+					String query = "INSERT INTO Scheduling(ID, Date, Shift)" +
+							"VALUES ("+emp.getId()+",'"+Store.setFormat(s.date)+"', '"+s.shift+"');";
+					DB.executeUpdate(query);
+				}
+			}	
+		}
+		showWeek(Store.getFirstDayOfWeek(Store.currentDate, false));
+		
+	}
+	
+	private static Shift makeShift(Date date , ShiftPart shiftPart , HashMap<Employee, int[]> map){		
 		Employee.Position[] positions = Employee.Position.values();
 		HashMap<Employee.Position,Integer> posMap = new HashMap<>(); // position and number that needed
 		Shift shift = searchByDate(date,shiftPart);
@@ -203,23 +236,31 @@ public class Shift {
 			else
 				posMap.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
 		}
+		HashMap<Position, Vector<Employee>> posVec = new HashMap<>();
 		Iterator<?> it = posMap.entrySet().iterator();
 		while(it.hasNext()){
 			HashMap.Entry<Employee.Position, Integer> pair = (HashMap.Entry)it.next();
 			if((int)pair.getValue() == 0)
 				continue ;
+			
 			Employee[] empArr = Employee.searchEmployee("Position",pair.getKey()+"");
 			sortArr(empArr,map);
-			System.out.println( "nedded "+pair.getValue()+" "+pair.getKey());
+			Vector<Employee> vec = new Vector<>();
 			for(int i=0; (int)pair.getValue() > 0 &&  i<empArr.length; i++){
 				if(Constraint.isAvailable(empArr[i], date, shiftPart)){
-					System.out.println(empArr[i]+" date "+Store.setFormat(date)+" shift "+shiftPart);
+					vec.addElement(empArr[i]);
 					pair.setValue((int)pair.getValue()-1);  //decrease needed amount 
 					map.get(empArr[i])[0]++;
 				}
 			}
+			if ((int)pair.getValue() > 0){
+				System.out.println("Problem on "+Store.setFormat(date)+" "+shiftPart);
+				System.out.println("We need more "+pair.getValue()+" "+pair.getKey());
+				return null;
+			}
+			posVec.put(pair.getKey(), vec);
 		}
-		
+		return new Shift(false, shiftPart, date, posVec);		
 	}
 	
 	private static void sortArr(Employee[] empArr, HashMap<Employee, int[]> map){
@@ -314,10 +355,9 @@ public class Shift {
 		Iterator<?> it = shift.positions.entrySet().iterator();
 		while(it.hasNext()){
 			HashMap.Entry pair = (HashMap.Entry)it.next();
-			System.out.println(pair.getKey()+"s:("+((Vector<Employee>)pair.getValue()).size()+")");
-			System.out.print("\t");
+			System.out.println("\t"+pair.getKey()+"s:("+((Vector<Employee>)pair.getValue()).size()+")");
 			for(Employee emp : (Vector<Employee>)pair.getValue())
-				System.out.print(emp+"; ");
+				System.out.println("\t\t"+emp+" ");
 			System.out.println();
 		}
 	}
