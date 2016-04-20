@@ -57,6 +57,7 @@ public class Shift {
 			System.out.println("==Shifts==");
 			System.out.println("1.\t Show Shifts History");
 			System.out.println("2.\t Make Shift For Next Week");
+			System.out.println("2.\t Swap Shift");
 			System.out.println("3.\t Back");
 			usrInput = Store.getNumber();
 			switch(usrInput){
@@ -67,6 +68,9 @@ public class Shift {
 					addShift();
 					break;
 				case 3:
+					swapShifts();
+					break;
+				case 4:
 					return;
 			}
 		}	
