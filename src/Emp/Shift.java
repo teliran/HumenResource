@@ -57,8 +57,8 @@ public class Shift {
 			System.out.println("==Shifts==");
 			System.out.println("1.\t Show Shifts History");
 			System.out.println("2.\t Make Shift For Next Week");
-			System.out.println("2.\t Swap Shift");
-			System.out.println("3.\t Back");
+			System.out.println("3.\t Swap Shift");
+			System.out.println("4.\t Back");
 			usrInput = Store.getNumber();
 			switch(usrInput){
 				case 1:
@@ -434,6 +434,7 @@ public class Shift {
 	}
 	
 	public static void swapShifts(){
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("please enter shift Date of first employee");
 		Date date = Store.stringToDate(sc.nextLine());
@@ -444,14 +445,25 @@ public class Shift {
 		Employee.Position[] pos = Employee.Position.values();
 		int i = Store.selectFromMenu(pos);
 		Shift firstShift = searchByDate(date, shiftPart[part]);
+		Vector <Employee> vecEmp = firstShift.positions.get(pos[i]);
+		if (vecEmp == null){
+			System.out.println("No such Employee in givven shift");
+			return;
+		}
+			
 		Employee[] empArr = firstShift.positions.get(pos[i]).toArray(new Employee[0]);
 		Employee firstEmp = empArr[Store.selectFromMenu(empArr)];
 		/*Second Employee*/
-		System.out.println("please enter shift Date of first employee");
+		System.out.println("please enter shift Date of second employee");
 		Date date1 = Store.stringToDate(sc.nextLine());
 		System.out.println("please enter morning OR evening");
 		int part1 = Store.selectFromMenu(shiftPart);
 		Shift secondShift = searchByDate(date1,shiftPart[part1]);
+		Vector <Employee> vecEmp1 = firstShift.positions.get(pos[i]);
+		if (vecEmp1 == null){
+			System.out.println("No such Employee in givven shift");
+			return;
+		}
 		Employee[] empArr1 = secondShift.positions.get(pos[i]).toArray(new Employee[0]);
 		Employee secondEmp = empArr1[Store.selectFromMenu(empArr1)];		
 		if(secondShift.positions.get(pos[i]).contains(firstEmp)){
@@ -460,9 +472,9 @@ public class Shift {
 		}
 		DB.executeUpdate("DELETE FROM Scheduling WHERE ID = "+firstEmp.getId()+" AND Date ='"+ Store.setFormat(date)+"' AND Shift='"+shiftPart[part]+"'");
 		DB.executeUpdate("DELETE FROM Scheduling WHERE ID = "+secondEmp.getId()+" AND Date ='"+ Store.setFormat(date1)+"' AND Shift='"+shiftPart[part1]+"'");
-		DB.executeQuery("INSERT INTO Scheduling (ID,Date,Shift) VALUES ("+firstEmp.getId()+",'"+ Store.setFormat(date1)+"','"+shiftPart[part1]+"')");
-		DB.executeQuery("INSERT INTO Scheduling (ID,Date,Shift) VALUES ("+secondEmp.getId()+",'"+ Store.setFormat(date)+"','"+shiftPart[part]+"')");
-
+		DB.executeUpdate("INSERT INTO Scheduling (ID,Date,Shift) VALUES ("+firstEmp.getId()+",'"+ Store.setFormat(date1)+"','"+shiftPart[part1]+"')");
+		DB.executeUpdate("INSERT INTO Scheduling (ID,Date,Shift) VALUES ("+secondEmp.getId()+",'"+ Store.setFormat(date)+"','"+shiftPart[part]+"')");
+		System.out.println("Shifts has replaced !!!");
 	}
 	
 }
