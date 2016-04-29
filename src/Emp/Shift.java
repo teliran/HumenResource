@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,15 +23,13 @@ public class Shift {
 	private Date date;
 	private HashMap<Employee.Position, Vector<Employee>> positions;
 	
-	public Shift(boolean insert,ShiftPart shift ,Date date,HashMap<Employee.Position, Vector<Employee>> pos){
+	public Shift(ShiftPart shift ,Date date,HashMap<Employee.Position, Vector<Employee>> pos){
 		this.shift=shift;
 		this.date = date;
 		positions = pos;
 	}
 	
-	
-	
-	public boolean hasAmount(Employee.Position pos){
+	private boolean hasAmount(Employee.Position pos){
 		boolean ans= false;
 		ResultSet result = DB.executeQuery("SELECT * FROM Shifts WHERE Shift_Date = '"+Store.setFormat(date)+"' "
 				+ "AND Shift ='"+shift+"' AND Position ='"+pos+"'");
@@ -41,7 +38,7 @@ public class Shift {
 		}
 		return ans;
 	}
-	public int getAmount(Employee.Position pos){
+	private int getAmount(Employee.Position pos){
 		int ans=0;
 		ResultSet result = DB.executeQuery("SELECT * FROM Shifts WHERE Shift_Date = '"+Store.setFormat(date)+"' "
 				+ "AND Shift ='"+shift+"' AND Position ='"+pos+"'");
@@ -249,8 +246,7 @@ public class Shift {
 			}			
 		}
 		System.out.println("Build Complete!");
-		insertToDb(shiftArr);
-		
+		insertToDb(shiftArr);	
 	}
 	
 	private static void insertToDb(Shift[] arr){
@@ -265,8 +261,7 @@ public class Shift {
 				}
 			}	
 		}
-		showWeek(Store.getFirstDayOfWeek(Store.currentDate, false));
-		
+		showWeek(Store.getFirstDayOfWeek(Store.currentDate, false));	
 	}
 	
 	private static Shift makeShift(Date date , ShiftPart shiftPart , HashMap<Employee, int[]> map){		
@@ -305,7 +300,7 @@ public class Shift {
 			}
 			posVec.put(pair.getKey(), vec);
 		}
-		return new Shift(false, shiftPart, date, posVec);		
+		return new Shift(shiftPart, date, posVec);		
 	}
 	
 	private static void sortArr(Employee[] empArr, HashMap<Employee, int[]> map){
@@ -394,7 +389,7 @@ public class Shift {
 				positions.put(emp.getPosition(), new Vector<>());
 			positions.get(emp.getPosition()).add(emp);
 		}	
-		return new Shift(false,shift,date, positions);	
+		return new Shift(shift,date, positions);	
 	}
 	
 	public static void showCard(Shift shift){
@@ -433,8 +428,7 @@ public class Shift {
 		}
 	}
 	
-	public static void swapShifts(){
-		
+	public static void swapShifts(){		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("please enter shift Date of first employee");
 		Date date = Store.stringToDate(sc.nextLine());

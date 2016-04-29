@@ -2,16 +2,11 @@ package Emp;
 
 import java.sql.ResultSet;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Vector;
-
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-
 import DB.DB;
-import Emp.Employee.Position;
 import Emp.Shift.ShiftPart;
 
 public class Constraint {
@@ -248,10 +243,10 @@ public class Constraint {
 		if(empCon.length == 0)
 			return true;
 		if (shift.equals(ShiftPart.morning)){
-			if (empCon[0].getStartHour().before(morning));
+			if (empCon[0].getStartHour().before(morning))
 				return false;	
 		}
-		else if (empCon[0].getStartHour().after(morning)){
+		else if (empCon[0].getEndHour().after(morning)){
 				return false ;
 		}
 		return true;
