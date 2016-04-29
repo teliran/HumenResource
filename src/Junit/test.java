@@ -112,4 +112,29 @@ public class test {
 		DB.executeUpdate("DELETE FROM Constraints WHERE ID="+con.getId()+" AND Day='"+con.getDay()+"'");	
 		DB.executeUpdate("DELETE FROM Employees WHERE ID =-37");
 	}
+	
+	@Test
+	public void testGetNumberOfConstraint() {
+		Employee emp = new Employee(true, -37, "test", Employee.Position.cashier, 0, 0, Store.stringToDate("1/1/2016"), 0);
+		assertTrue(Constraint.getNumberOfConstraint(emp)==0);
+		Constraint con = new Constraint(true, emp.getId(), Store.Week.Friday, Store.stringToHour("08:30"), Store.stringToHour("12:30"));
+		assertTrue(Constraint.getNumberOfConstraint(emp)==1);
+		con = new Constraint(true, emp.getId(), Store.Week.Sunday, Store.stringToHour("08:30"), Store.stringToHour("12:30"));
+		assertTrue(Constraint.getNumberOfConstraint(emp)==2);
+		DB.executeUpdate("DELETE FROM Constraints WHERE ID="+con.getId());	
+		DB.executeUpdate("DELETE FROM Employees WHERE ID =-37");
+	}
+	
+	@Test
+	public void testShiftsInCon() {
+		Employee emp = new Employee(true, -37, "test", Employee.Position.cashier, 0, 0, Store.stringToDate("1/1/2016"), 0);
+		Constraint con = new Constraint(true, emp.getId(), Store.Week.Friday, Store.stringToHour("08:30"), Store.stringToHour("12:30"));
+		assertTrue(Constraint.shiftsInCon(con)==1);
+		con.setEndHour(Store.stringToHour("21:30"));
+		assertTrue(Constraint.shiftsInCon(con)==2);
+		con.setStartHour(Store.stringToHour("16:00"));
+		assertTrue(Constraint.shiftsInCon(con)==1);
+		DB.executeUpdate("DELETE FROM Constraints WHERE ID="+con.getId());	
+		DB.executeUpdate("DELETE FROM Employees WHERE ID =-37");
+	}
 }
