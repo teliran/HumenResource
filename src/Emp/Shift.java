@@ -385,7 +385,11 @@ public class Shift {
 		}
 		DB.closeResult(result);
 		for(Integer id : vector){
-			emp = Employee.searchEmployee("ID",id+"")[0];
+			Employee[] arr =Employee.searchEmployee("ID",id+"");
+			if(arr.length == 0)
+				emp = new Employee(false, id, "Deleted", null, 0, 0, null, 0);
+			else
+				emp = arr[0];
 			if(!positions.containsKey(emp.getPosition()))
 				positions.put(emp.getPosition(), new Vector<>());
 			positions.get(emp.getPosition()).add(emp);
