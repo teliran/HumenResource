@@ -14,7 +14,7 @@ import Emp.Employee;
 import Emp.Shift;
 import Emp.Store;
 
-public class test {
+public class Tests {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
