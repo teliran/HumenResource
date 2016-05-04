@@ -1,4 +1,4 @@
-package Emp;
+package store;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 import DB.DB;
+import Emp.Constraint;
+import Emp.Employee;
+import Emp.Shift;
+import transport.TransManager;
+import transport.Transport;
 
 public class Store {
 	private String name;
@@ -51,8 +56,9 @@ public class Store {
 			System.out.println("Main Menu :");
 			System.out.println("1.\t Employees");
 			System.out.println("2.\t Shifts");
-			System.out.println("3.\t Constraint");		
-			System.out.println("4.\t Exit");	
+			System.out.println("3.\t Constraint");
+			System.out.println("4.\t Transport");
+			System.out.println("5.\t Exit");	
 			userInput = getNumber();
 			switch (userInput){
 			case 1:
@@ -64,7 +70,10 @@ public class Store {
 			case 3:
 				Constraint.showMenu();
 				break;
-			case 4: //EXIT
+			case 4:
+				TransManager.showMainMenu();
+				break;
+			case 5: //EXIT
 				return;			
 			}
 		}	

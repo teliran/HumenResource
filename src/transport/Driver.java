@@ -1,40 +1,26 @@
 package transport;
 import java.sql.*;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.Vector;
+
+import com.sun.java.util.jar.pack.DriverResource;
+
 import DB.DB;
+import Emp.Employee;
 import transport.TransManager.License;
-public class Driver {
-	
-	private String _firstName;
-	private String _lastName;
-	private int _id;
+public class Driver extends Employee {
 	private License _lisence;
-	
-	public Driver(boolean toAdd,String _firstName, String _lastName, int _id, License _lisence) {
-		this._firstName = _firstName;
-		this._lastName = _lastName;
-		this._id = _id;
-		this._lisence = _lisence;
-		if (toAdd){
-			String query = "INSERT INTO Drivers (ID,First_Name,Last_Name,License) " +
-	                   "VALUES ("+_id+", '"+_firstName+"', '"+_lastName+"' ,'"+getLicenseString()+"');";
+
+	public Driver(boolean insert,Employee emp , License license) {
+		super(false, emp.getId(), emp.getName(), emp.getPosition(), emp.getBankNumber() ,emp.getAccountNumber(),emp.getStartDate(), emp.getSalaryPerHour());
+		this._lisence=license;
+		if (insert){
+			String query = "INSERT INTO Drivers (ID,License) " +
+	                   "VALUES ("+emp.getId()+",'"+license+"');";
 			DB.executeUpdate(query);
 		}
 	}
-
-	public String get_firstName() {
-		return _firstName;
-	}
-
-	public String get_lastName() {
-		return _lastName;
-	}
-
-	public int get_id() {
-		return _id;
-	}
-
 	public License get_lisence() {
 		return _lisence;
 	}
@@ -54,23 +40,6 @@ public class Driver {
 		return ret;
 	}
 	
-	private static License getStringToLicense(String lis){
-		switch (lis){
-		case "A":
-			return License.A;
-		case "B":
-			return License.B;
-		case "C":
-			return License.C;
-		}
-		return License.A;
-	}
-
-	@Override
-	public String toString() {
-		return "Driver [ID: "+_id+" First Name: " + _firstName + ", Last Name: " + _lastName + ", Lisence: " + getLicenseString() + "]";
-	}
-	
 	public static void showDriversMenu(){
 		int selection;
 		while(true){
@@ -79,9 +48,7 @@ public class Driver {
 			System.out.println("============================");
 			System.out.println("1)   Search Driver");
 			System.out.println("2)   Show Available Drivers");
-			System.out.println("3)   Add New Driver");
-			//System.out.println("4)   Delete Driver");
-			System.out.println("4)   Return");
+			System.out.println("3)   Return");
 			System.out.println("============================");
 			System.out.println("--------Drivers Menu--------");
 			System.out.println("============================");
@@ -94,9 +61,6 @@ public class Driver {
 				showAvailableDrivers();
 				break;
 			case 3:
-				addDriver();
-				break;
-			case 4:
 				return;
 			}
 		}
@@ -104,52 +68,20 @@ public class Driver {
 
 	private static void showDriver(Driver d) {
 		System.out.println("===================================");
-		System.out.println("-----------Driver: "+d.get_id()+"----------");
+		System.out.println("-----------Driver: "+d.getId()+"----------");
 		System.out.println("===================================");
-		System.out.println("First Name: "+ d.get_firstName());
-		System.out.println("Last Name: "+ d.get_lastName());
+		System.out.println("Name: "+ d.getName());
 		System.out.println("License: "+d.getLicenseString());
 		System.out.println("===================================");
-		System.out.println("-----------Driver: "+d.get_id()+"----------");
-		System.out.println("===================================");
+
 	}
 
-	private static Driver addDriver() {
-		System.out.println("===============================");
-		System.out.println("-----------Add Driver----------");
-		System.out.println("===============================");
-		System.out.println("Enter Driver ID (9 digits):");
-		int id = TransManager.getInputNumber();
-		while(searchDriver("ID",id+"").length != 0){ // result array isn't empty
-			System.out.println("The entered ID already exists");
-			id = TransManager.getInputNumber();
-		}
-		System.out.println("Enter Driver First Name:");
-		Scanner sc = new Scanner(System.in);
-		String firstName = sc.nextLine();
-		System.out.println("Enter Driver Last Name:");
-		String lastName = sc.nextLine();
-		System.out.println("Enter Driver License: A, B, C");
-		String license = sc.nextLine();
-		while (!(license.equals("A")||license.equals("B")||license.equals("C"))){
-			System.out.println("Not a Valid License, Try again");
-			license = sc.nextLine();
-		}
-		return new Driver(true, firstName, lastName, id, getStringToLicense(license));	
-	}
+
 
 	private static void showAvailableDrivers() {
-		int i = 1;
-		ResultSet result = DB.executeQuery("SELECT * FROM Drivers");
-		while(DB.next(result)){
-			Driver tempD = new Driver(false, DB.getString(result, "First_Name"), 
-					DB.getString(result, "Last_Name"), DB.getInt(result, "ID"), 
-					getStringToLicense((DB.getString(result, "License"))));
-			System.out.println(i+")   "+ tempD.toString());
-			i++;
-		}
-		DB.closeResult(result);
-		
+		Driver[] empArr = createDriverArr(Employee.searchEmployee("Position","driver"));	
+		for(int i=0; i<empArr.length; i++)
+			showDriver(empArr[i]);
 	}
 
 	/**
@@ -168,10 +100,9 @@ public class Driver {
 			System.out.println("--------Search Driver--------");
 			System.out.println("===============================");
 			System.out.println("1)   Search By ID");
-			System.out.println("2)   Search By First Name");
-			System.out.println("3)   Search By Last Name");
-			System.out.println("4)   Search By License");
-			System.out.println("5)   Exit");
+			System.out.println("2)   Search By Name");
+			System.out.println("3)   Search By License");
+			System.out.println("4)   Exit");
 			System.out.println("===============================");
 			System.out.println("--------Search Driver--------");
 			System.out.println("===============================");
@@ -188,8 +119,8 @@ public class Driver {
 				return drv[secSelect];
 			
 			case 2:
-				System.out.println("Please Enter First Name:");
-				drv=searchDriver("First Name",sc.nextLine());
+				System.out.println("Please Enter Name:");
+				drv=searchDriver("Name",sc.nextLine());
 				if (drv.length==0){
 					System.out.println("No Results found");
 					break;
@@ -197,17 +128,8 @@ public class Driver {
 				secSelect = TransManager.selectFromChoises(drv);
 				return drv[secSelect];	
 			
-			case 3:
-				System.out.println("Please Enter Last Name:");
-				drv=searchDriver("Last Name",sc.nextLine());
-				if (drv.length==0){
-					System.out.println("No Results found");
-					break;
-				}
-				secSelect = TransManager.selectFromChoises(drv);
-				return drv[secSelect];
 				
-			case 4:
+			case 3:
 				System.out.println("Please Enter License:");
 				drv=searchDriver("License",sc.nextLine());
 				if (drv.length==0){
@@ -217,44 +139,62 @@ public class Driver {
 				secSelect = TransManager.selectFromChoises(drv);
 				return drv[secSelect];
 				
-			case 5:
+			case 4:
 				return null;
 			}
+		}		
+	}
+	
+	private static License getEmpLicense(Employee emp){
+		License lis = null;
+		ResultSet result = DB.executeQuery("SELECT * FROM Drivers WHERE ID = "+emp.getId());
+		if(DB.next(result)){
+			lis = License.valueOf(DB.getString(result, "License"));
 		}
-			
+		DB.closeResult(result);
+		return lis;
+	}
+	
+	private static Driver[] createDriverArr (Employee[] empArr){
+		Vector<Driver> driversResult = new Vector<Driver>();
+		for(Employee emp : empArr){
+			License lic = getEmpLicense(emp);
+			if(lic != null){
+				driversResult.add(new Driver(false, emp, lic));
+			}
+		}
+		return driversResult.toArray(new Driver[0]);
 	}
 
 	public static Driver[] searchDriver(String field,String value){
 		ResultSet result = null;
+		Employee[] empArr;
 		Vector<Driver> driversResult = new Vector<Driver>();
 		switch(field){
 		case "ID":
 		case "id":
-			result = DB.executeQuery("SELECT * FROM Drivers WHERE ID LIKE '%"+value+"%';");
-			break;
-		case "First Name": 
-		case "First_Name": 
-		case "first name":
-			result = DB.executeQuery("SELECT * FROM Drivers WHERE First_Name LIKE '%"+value+"%'");
-			break;
-		case "Last Name": 
-		case "Last_Name": 
-		case "last name":
-			result = DB.executeQuery("SELECT * FROM Drivers WHERE Last_Name LIKE '%"+value+"%'");
-			break;
+			empArr = Employee.searchEmployee("ID",value);
+			return createDriverArr(empArr);
+		case "Name": 
+			empArr = Employee.searchEmployee("Name",value);
+			return createDriverArr(empArr);
 		case "License":
 		case "license":
-			result = DB.executeQuery("SELECT * FROM Drivers WHERE License LIKE '%"+value+"%'");
-			break;	
+			result = DB.executeQuery("SELECT * FROM Drivers WHERE License LIKE '%"+value+"%'");	
+			while(DB.next(result)){
+				empArr = Employee.searchEmployee("ID", DB.getInt(result, "ID")+"");
+				if(empArr.length==0){
+					DB.closeResult(result);
+					return new Driver[0];	
+				}				
+				Employee emp = empArr[0];
+				Driver tempD = new Driver(false, emp, License.valueOf(DB.getString(result, "License")));
+				driversResult.add(tempD);
+			}
+			DB.closeResult(result);
+			return driversResult.toArray(new Driver[0]);	
 		}
-		while(DB.next(result)){
-			Driver tempD = new Driver(false, DB.getString(result, "First_Name"), 
-					DB.getString(result, "Last_Name"), DB.getInt(result, "ID"), 
-					getStringToLicense((DB.getString(result, "License"))));
-			driversResult.add(tempD);
-		}
-		DB.closeResult(result);
-		return driversResult.toArray(new Driver[0]);	
+		return null;
 	}
 	
 	

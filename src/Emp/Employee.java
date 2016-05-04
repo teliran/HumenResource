@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import DB.DB;
+import store.Store;
 
 public class Employee { 
 	private int id;

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.Vector;
 import DB.DB;
 import Emp.Shift.ShiftPart;
+import store.Store;
 
 public class Constraint {
 	private int id;

@@ -12,7 +12,7 @@ import DB.DB;
 import Emp.Constraint;
 import Emp.Employee;
 import Emp.Shift;
-import Emp.Store;
+import store.Store;
 
 public class Tests {
 

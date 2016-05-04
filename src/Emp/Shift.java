@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import DB.DB;
 import Emp.Employee.Position;
+import store.Store;
 
 public class Shift {
 	public static enum ShiftPart{morning, evening};

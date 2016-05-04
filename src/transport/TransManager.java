@@ -120,17 +120,7 @@ public class TransManager {
 		}
 	}
 	
-	public static void main(String[]args){
-			DB.open();
-			TransManager trans = new TransManager("Transportation Department","1111");
-			//trans.showMenu();
-			//Track.showTrucksMenu();
-			//Driver.showDriversMenu();
-			giveOrderDoc(99999);
-			//showMainMenu();
-			//System.out.println(((int)(Math.random()*_productsArr.length+1)));
-			DB.close();
-	}
+
 	private static  void showOrderDocsHistory() throws SQLException {
 		System.out.println("============================");
 		System.out.println("--------Docs History--------");
@@ -178,7 +168,7 @@ public class TransManager {
 				selection = TransManager.getInputNumber();
 				switch (selection){
 				case 1:
-					//Transport.showTransMenu();
+					Transport.showTransMenu();
 					break;
 				case 2:
 					Driver.showDriversMenu();;
