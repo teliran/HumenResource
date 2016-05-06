@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import DB.DB;
+import Emp.Shift.ShiftPart;
 import store.Store;
 
 public class Employee { 
@@ -269,6 +270,7 @@ public class Employee {
 		}
 	}
 	
+	
 	/**
 	 * Search Employee by selected type
 	 * @param type the type of search (ID,Name,All)
@@ -290,6 +292,22 @@ public class Employee {
 			result = DB.executeQuery("SELECT * FROM Employees WHERE Position = '"+value+"'");
 		}
 		return getEmployeeArr(result);
+	}
+	
+	public static Employee[] getEmpOnShift(Date date,Position pos){
+		Shift shift=null;
+		Date start =Store.stringToHour("07:00");
+		Date morning =Store.stringToHour("15:00");
+		Date evening =Store.stringToHour("23:00");
+		if(date.after(start) && date.before(morning)){ // morning
+			shift = Shift.searchByDate(date, ShiftPart.morning);
+		}
+		else if ( date.after(morning) && date.before(evening)){ //evening
+			shift= Shift.searchByDate(date, ShiftPart.evening);
+		}
+		if(shift == null)
+			return new Employee[0];
+		return shift.getPosition().get(pos).toArray(new Employee[0]);
 	}
 	
 	/**

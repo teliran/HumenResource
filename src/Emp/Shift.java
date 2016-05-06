@@ -421,6 +421,10 @@ public class Shift {
 	public Date getDate() {
 		return date;
 	}
+	
+	public HashMap<Employee.Position, Vector<Employee>> getPosition(){
+		return positions;
+	}
 	public void setDate(String date) {
 		SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
 		try {
