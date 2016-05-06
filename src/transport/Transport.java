@@ -162,7 +162,7 @@ public class Transport {
 			try{
 				scan = new Scanner(System.in);
 				driverID =  scan.nextInt();
-				if (Driver.searchEmployee("ID",driverID+"").length==0)
+				if (Driver.searchDriver("ID",driverID+"").length==0)
 					throw new InputMismatchException();
 				flag = false;		
 			}
