@@ -59,7 +59,7 @@ public class Driver extends Employee {
 				showDriver(searchDriver());
 				break;
 			case 2:
-				showAvailableDrivers();
+				showDriver(showAvailableDrivers());
 				break;
 			case 3:
 				return;
@@ -74,17 +74,22 @@ public class Driver extends Employee {
 		System.out.println("Name: "+ d.getName());
 		System.out.println("License: "+d.getLicenseString());
 		System.out.println("===================================");
+		System.out.println("Press any key to return");
+		Scanner sc = new Scanner(System.in);
+		sc.nextLine();
 
 	}
 
 
 	//Here to put the choice
-	private static void showAvailableDrivers() {
+	private static Driver showAvailableDrivers() {
 		Driver[] empArr = createDriverArr(Employee.getEmpOnShift(Store.currentDate, Position.driver));
-		for(int i=0; i<empArr.length; i++){
+		/*for(int i=0; i<empArr.length; i++){
 			//showDriver(empArr[i]);
 			System.out.println((i+1)+")  "+empArr[i]);
-		}
+		}*/
+		int select = TransManager.selectFromChoises(empArr);
+		return empArr[select];
 	}
 
 	/**
@@ -146,6 +151,11 @@ public class Driver extends Employee {
 				return null;
 			}
 		}		
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + " License: " + _lisence;
 	}
 	
 	private static License getEmpLicense(Employee emp){

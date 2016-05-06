@@ -83,6 +83,7 @@ public class TransManager {
 				return selection-1;
 		}
 	}
+	
 	public static String  giveOrderDoc(int transId){
 		String ret ="";
 		int zone = (int) (Math.random()*2);
