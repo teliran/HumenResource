@@ -181,17 +181,24 @@ public class Driver extends Employee {
 		case "License":
 		case "license":
 			result = DB.executeQuery("SELECT * FROM Drivers WHERE License LIKE '%"+value+"%'");	
+			Vector<Integer> vecId = new Vector();
+			Vector<String> vecLic = new Vector();
 			while(DB.next(result)){
-				empArr = Employee.searchEmployee("ID", DB.getInt(result, "ID")+"");
-				if(empArr.length==0){
-					DB.closeResult(result);
+				vecId.addElement(DB.getInt(result, "ID"));
+				vecLic.addElement(DB.getString(result, "License"));
+			}
+			DB.closeResult(result);
+			int i=0;
+			for(Integer ID : vecId){
+				empArr = Employee.searchEmployee("ID", ID+"");
+				if(empArr.length==0){				
 					return new Driver[0];	
 				}				
 				Employee emp = empArr[0];
-				Driver tempD = new Driver(false, emp, License.valueOf(DB.getString(result, "License")));
+				Driver tempD = new Driver(false, emp, License.valueOf(vecLic.elementAt(i)));
 				driversResult.add(tempD);
+				i++;
 			}
-			DB.closeResult(result);
 			return driversResult.toArray(new Driver[0]);	
 		}
 		return null;

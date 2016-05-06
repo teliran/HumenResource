@@ -37,7 +37,7 @@ public class Transport {
 			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum) " +
 	                "VALUES ("+ID+", "+driverID+", "+trackId+", '"+desAddress+"' ,'"+fromAddress+"' ,'"+date.getDate()+"/"+date.getMonth()+"/"+(date.getYear()+1900)+"' ,'"+time.getHours()+":"+time.getMinutes()+"' ,"+contactPhone+" ,'"+contactName+"' ,"+deocNum+");";
 		System.out.println(query);
-			DB.executeUpdate(query);
+		DB.executeUpdate(query);
 		}
 	}
 	public static int getNewID(){
@@ -624,20 +624,19 @@ public class Transport {
 		case(4):
 			type="depTime";
 			Date time=new Date(1);
-		 System.out.println("Enter departure time (hh:mm)");
-		 flag=true;
-		 sdf = new SimpleDateFormat("HH:mm");
-		 while (flag){
-			 try{
-			scan = new Scanner(System.in);
-			String str = scan.next();
-			date = sdf.parse(str);
-				flag=false;
-	
-		 }
-			 catch(ParseException e){
-				 System.out.println("Invalid hour");
-			 }
+			System.out.println("Enter departure time (hh:mm)");
+			flag=true;
+			sdf = new SimpleDateFormat("HH:mm");
+			while (flag){
+				try{
+					scan = new Scanner(System.in);
+					String str = scan.next();
+					date = sdf.parse(str);
+					flag=false;
+				 }
+				 catch(ParseException e){
+					 System.out.println("Invalid hour");
+				 }
 		 }
 		 value=time+"";
 			break;
@@ -679,27 +678,27 @@ public class Transport {
 		ResultSet result=DB.executeQuery("SELECT * FROM Transport WHERE ID="+ID);
 		if(DB.next(result)){
 		switch (filde){
-		case("driverID"):
-			temp=temp+" SET driverID='"+value+"'";
-		break;
-		case("truckID"):
-			temp=temp+" SET truckID='"+value+"'";
-		break;
-		case("depDate"):
-			temp=temp+" SET depDate='"+value+"'";
-		break;
-		case("depTime"):
-			temp=temp+" SET depTime='"+value+"'";
-		break;
-		case("contactPhone"):
-			temp=temp+" SET contactPhone='"+value+"'";
-		break;
-		case("contactName"):
-			temp=temp+" SET contactName='"+value+"'";
-		break;
-		default:
-			System.out.println("Invalid filed");
-		}
+			case("driverID"):
+				temp=temp+" SET driverID='"+value+"'";
+			break;
+			case("truckID"):
+				temp=temp+" SET truckID='"+value+"'";
+			break;
+			case("depDate"):
+				temp=temp+" SET depDate='"+value+"'";
+			break;
+			case("depTime"):
+				temp=temp+" SET depTime='"+value+"'";
+			break;
+			case("contactPhone"):
+				temp=temp+" SET contactPhone='"+value+"'";
+			break;
+			case("contactName"):
+				temp=temp+" SET contactName='"+value+"'";
+			break;
+			default:
+				System.out.println("Invalid filed");
+			}
 		}
 		else System.out.println("This ID dosn't exist");
 		temp =temp+" WHERE ID="+ID;
