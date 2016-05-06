@@ -78,11 +78,13 @@ public class Driver extends Employee {
 	}
 
 
-
+	//Here to put the choice
 	private static void showAvailableDrivers() {
 		Driver[] empArr = createDriverArr(Employee.getEmpOnShift(Store.currentDate, Position.driver));
-		for(int i=0; i<empArr.length; i++)
-			showDriver(empArr[i]);
+		for(int i=0; i<empArr.length; i++){
+			//showDriver(empArr[i]);
+			System.out.println((i+1)+")  "+empArr[i]);
+		}
 	}
 
 	/**
