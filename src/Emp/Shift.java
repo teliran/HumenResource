@@ -189,7 +189,7 @@ public class Shift {
 				map.put(pos, shift.getAmount(pos));
 			else{
 				map.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
-			}				
+			}
 		while(true){
 			System.out.println("===Workers Per Shift "+Store.setFormat(shift.date)+" At "+shift.shift+"===");			
 			String[] str = new String[positions.length+1];
@@ -277,6 +277,11 @@ public class Shift {
 			else
 				posMap.put(pos,getAmountLastWeek(pos,shift.date,shift.shift));
 		}
+		// validate that if have drivers we have at least 1 StoreKeeper
+		if(posMap.get(Position.driver).intValue() > 0)
+			if(posMap.get(Position.storeKeeper).intValue() == 0)
+				posMap.put(Position.storeKeeper, 1);
+		//
 		HashMap<Position, Vector<Employee>> posVec = new HashMap<>();
 		Iterator<?> it = posMap.entrySet().iterator();
 		while(it.hasNext()){

@@ -19,6 +19,15 @@ public class Employee {
 	private int salaryPerHour;
 	public static enum Position{hrManager, stockManager, storeKeeper, 
 		cashier, driver, storeManager, shiftManager};
+	/* 
+	 * hrManger - מנהל כוח אדם
+	 * stockManager - מנהל מלאי
+	 * storeKeeper - מחסנאי
+	 * cashier - קופאי
+	 * driver - נהג
+	 * storeManager - מנהל חנות
+	 * shiftManager - מנהל משמרת
+	 */
 	
 	//Construct	
 	public Employee(boolean insert,int id, String name, Position pos, int bankNumber,int accountNumber,Date startDate,int salaryPerHour){
