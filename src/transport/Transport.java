@@ -36,7 +36,7 @@ public class Transport {
 		if (insert){
 			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum) " +
 	                "VALUES ("+ID+", "+driverID+", "+trackId+", '"+desAddress+"' ,'"+fromAddress+"' ,'"+date.getDate()+"/"+date.getMonth()+"/"+(date.getYear()+1900)+"' ,'"+time.getHours()+":"+time.getMinutes()+"' ,"+contactPhone+" ,'"+contactName+"' ,"+deocNum+");";
-		System.out.println(query);
+		//System.out.println(query);
 		DB.executeUpdate(query);
 		}
 	}

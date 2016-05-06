@@ -17,8 +17,8 @@ import DB.DB;
  */
 public class TransManager {
 	public static final int north = 0, south = 1;
-	private static int _docID = -1;
-	private static int _ID = 0;
+	private static int _docID = getLastId("DocID", "Doc_History");
+	private static int _ID = getLastId("ID", "Transport");
 	private static  String[] _productsArr={"Tomato", "Onion", "Cucamber", "Lemon", "Apple", "Pich", "Pasta", "Rice",
 			"Flour", "Olive Oil", "Canola Oil", "Hummus", "Coca-Cola Zero", "Mineral Water", "Coockies", "Toilet Paper",
 			"Bread", "Eggs", "Chicken", "Beef", "Cereals", "TV", "Laptop", "Receiver", "Washing Machine", "HDMI cable"};
@@ -31,7 +31,19 @@ public class TransManager {
 		_user = user;
 		_password = pass;
 	}
-
+	public static int getLastId(String id, String table){
+		int ret = -1;
+		String query = "SELECT MAX("+id+") FROM "+table;
+		ResultSet result = DB.executeQuery(query);
+		if (DB.next(result)){
+			ret = DB.getInt(result, "MAX("+id+")");
+			DB.closeResult(result);
+			return ret;
+		}
+		DB.closeResult(result);
+		return ret;
+	}
+	
 	public static int getDocId(){
 		_docID++;
 		return _docID;

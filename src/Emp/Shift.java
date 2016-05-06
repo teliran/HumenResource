@@ -282,6 +282,7 @@ public class Shift {
 			if(posMap.get(Position.storeKeeper).intValue() == 0)
 				posMap.put(Position.storeKeeper, 1);
 		//
+		
 		HashMap<Position, Vector<Employee>> posVec = new HashMap<>();
 		Iterator<?> it = posMap.entrySet().iterator();
 		while(it.hasNext()){
