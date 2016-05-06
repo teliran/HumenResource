@@ -78,6 +78,12 @@ public class Track {
 		return new Track(true, id, color, weight, carry);	
 	}
 	
+	@Override
+	public String toString() {
+		return "Track [truckID=" + truckID + ", license=" + license + ", color=" + color + ", NetoWeight=" + NetoWeight
+				+ ", CarryingWeight=" + CarryingWeight + "]";
+	}
+
 	public static void showTruck(Track truck){
 		if (truck == null)
 			return;
