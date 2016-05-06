@@ -68,12 +68,16 @@ public class Driver extends Employee {
 	}
 
 	private static void showDriver(Driver d) {
-		System.out.println("===================================");
-		System.out.println("-----------Driver: "+d.getId()+"----------");
-		System.out.println("===================================");
-		System.out.println("Name: "+ d.getName());
-		System.out.println("License: "+d.getLicenseString());
-		System.out.println("===================================");
+		if (d==null)
+			System.out.println("***No Driver to show***");
+		else{
+			System.out.println("===================================");
+			System.out.println("-----------Driver: "+d.getId()+"----------");
+			System.out.println("===================================");
+			System.out.println("Name: "+ d.getName());
+			System.out.println("License: "+d.getLicenseString());
+			System.out.println("===================================");
+		}
 		System.out.println("Press any key to return");
 		Scanner sc = new Scanner(System.in);
 		sc.nextLine();
@@ -82,13 +86,15 @@ public class Driver extends Employee {
 
 
 	//Here to put the choice
-	private static Driver showAvailableDrivers() {
+	public static Driver showAvailableDrivers() {
 		Driver[] empArr = createDriverArr(Employee.getEmpOnShift(Store.currentDate, Position.driver));
 		/*for(int i=0; i<empArr.length; i++){
 			//showDriver(empArr[i]);
 			System.out.println((i+1)+")  "+empArr[i]);
 		}*/
 		int select = TransManager.selectFromChoises(empArr);
+		if (select == -1)
+			return null;
 		return empArr[select];
 	}
 

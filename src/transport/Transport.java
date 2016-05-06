@@ -20,7 +20,7 @@ public class Transport {
 	private String contactName;
 	private String deocNum;
 	private static Scanner scan;
-	
+	private static final String on = "ONGOING", done = "DONE";
 	public Transport(boolean insert,int ID, int driverID, int trackId, String desAddress, String fromAddress, 
 		        	Date date,Date time, int contactPhone, String contactName, String deocNum) {
 		this.ID=ID;
@@ -34,9 +34,9 @@ public class Transport {
 		this.contactName = contactName;
 		this.deocNum = deocNum;
 		if (insert){
-			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum) " +
-	                "VALUES ("+ID+", "+driverID+", "+trackId+", '"+desAddress+"' ,'"+fromAddress+"' ,'"+date.getDate()+"/"+date.getMonth()+"/"+(date.getYear()+1900)+"' ,'"+time.getHours()+":"+time.getMinutes()+"' ,"+contactPhone+" ,'"+contactName+"' ,"+deocNum+");";
-		//add transport field onExecute
+			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum,Status) " +
+	                "VALUES ("+ID+", "+driverID+", "+trackId+", '"+desAddress+"' ,'"+fromAddress+"' ,'"+date.getDate()+"/"+date.getMonth()+"/"+(date.getYear()+1900)+"' ,'"+time.getHours()+":"+time.getMinutes()+
+	                "' ,"+contactPhone+" ,'"+contactName+"', "+deocNum+", '"+on+"');";
 		DB.executeUpdate(query);
 		}
 	}
@@ -154,46 +154,33 @@ public class Transport {
 	}
 	
 	public static Transport addTrans(){
-	    int driverID=1;
-	    int ID=getNewID();
-	    System.out.println("Enter driver ID 9 digit");
+	    int ID = getNewID();//TransId index
 		boolean flag=true;
-		while(flag){
-			try{
-				scan = new Scanner(System.in);
-				driverID =  scan.nextInt();
-				if (Driver.searchDriver("ID",driverID+"").length==0)
-					throw new InputMismatchException();
-				flag = false;		
-			}
-			catch (InputMismatchException e){
-				System.out.println("Invalid ID");	
-			}
+		// DriverID for transport
+		System.out.println("Select Driver: ");
+		Driver tempDriver = Driver.showAvailableDrivers();
+	    if (tempDriver==null){
+	    	System.out.println("No available Driver for transport");
+	    	return null;
+	    }
+	    int driverID = tempDriver.getId();
+	    // Truck ID for transport
+	    System.out.println("Select Truck: ");
+	    Track[] trk=Track.searchTruck("Availability", Track.yes);
+		if (trk.length==0){
+			System.out.println("No Available trucks for transport");
+			return null;
 		}
-	    int truckID=1;
-	    System.out.println("Enter truck ID 7 digit");
-		flag=true;
-		while(flag){
-			try{
-				scan = new Scanner(System.in);
-				truckID =  scan.nextInt();
-				if (truckID<1000000 | truckID>9999999)
-					throw new InputMismatchException();
-				if (Track.searchTruck("TruckID",truckID+"").length==0)
-				    throw new InputMismatchException();
-				if(Track.searchTruck("TruckID",truckID+"")[0].getLicense()==Driver.searchDriver("ID",driverID+"")[0].get_lisence())
-					throw new NumberFormatException();
-					if (truckID%1!=0)
-					throw new InputMismatchException();
-				flag = false;		
-			}
-			catch (InputMismatchException e){
-				System.out.println("Invalid ID");	
-			}
-			catch(NumberFormatException r){
-				System.out.println("Truck and driver License mismatch");
-			}
+		Track tempTruck = trk[TransManager.selectFromChoises(trk)];
+		int truckID = tempTruck.getTrackID();
+		
+		if (!tempTruck.checkIfDriverSuitable(tempDriver)){
+			System.out.println("The Driver: "+tempDriver.getName()+" can't drive Truck: "+tempTruck.getTrackID()+"\n"
+					+ " Due to License mismatch");
+			return null;
 		}
+			
+		// Date and Contacts
 		Date date=new Date(1,1,1);
 		System.out.println("Enter departure date (dd/MM/yyyy)");
 		flag=true;
@@ -269,6 +256,7 @@ public class Transport {
 				endIndex++;
 			des = des+Helper.substring(0, endIndex);
 		}
+		tempTruck.setAvailabilty(false);
 		return new Transport(true,ID,driverID,truckID,des,from,date ,time,contact,con,deco);
 	}
 	
@@ -673,6 +661,7 @@ public class Transport {
 		}
 		return false;
 	}
+	
 	public static boolean editTrans(String value, String filde,String ID){
 		String temp = "UPDATE Transport";
 		ResultSet result=DB.executeQuery("SELECT * FROM Transport WHERE ID="+ID);

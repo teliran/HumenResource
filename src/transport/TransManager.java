@@ -70,6 +70,9 @@ public class TransManager {
 
 	
 	public static int selectFromChoises(Object[] arr){
+		if (arr.length==0){
+			return -1;
+		}
 		int selection;
 		System.out.println("========= Enter your choise between range(1 - " +arr.length+") ==========");
 		for (int i=0; i<arr.length; i++){

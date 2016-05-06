@@ -9,7 +9,7 @@ import DB.DB;
 import transport.TransManager.License;
 
 public class Track {
-	private static final String yes ="YES", no = "NO";
+	 public static final String yes ="YES", no = "NO";
 	 private int truckID;
 	 private License license;
 	 private String color;
@@ -64,6 +64,11 @@ public class Track {
 		System.out.println("===============================");
 		System.out.println("Enter Truck License Plate (7 digits):");
 		int id = TransManager.getInputNumber();
+		while (id>9999999 && id<1000000){
+			System.out.println("Enter Truck License Plate (7 digits):");
+			id = TransManager.getInputNumber();
+		}
+		//Now checking the unique ID	
 		while(searchTruck("TruckID",id+"").length != 0){ // result array isn't empty
 			System.out.println("The entered Plate already exists");
 			id = TransManager.getInputNumber();
@@ -162,8 +167,13 @@ public class Track {
 			primSelect = TransManager.getInputNumber();
 			switch(primSelect){
 			case 1:
-				System.out.println("Please Enter Truck ID:");
-				trk=searchTruck("TruckID",sc.nextLine());
+				System.out.println("Please Enter Truck ID (7 digits):");
+				int id = TransManager.getInputNumber();
+				while (id>9999999 && id<1000000){
+					System.out.println("Enter Truck License Plate (7 digits):");
+					id = TransManager.getInputNumber();
+				}
+				trk=searchTruck("TruckID",id+"");
 				if (trk.length==0){
 					System.out.println("No Results found");
 					break;
@@ -204,13 +214,13 @@ public class Track {
 			case 5:
 				System.out.println("Please Enter Availbillity (YES / NO):");
 				String resp = sc.nextLine();
-				while(!(resp.equals(yes) || !resp.equals(no))){
-					System.out.println("please enter YES or No, or 'q' to return");
+				while(!(resp.equals(yes) || resp.equals(no))){
+					System.out.println("please enter YES or NO, or 'q' to return");
 					resp = sc.nextLine();
 					if (resp.equals("q"))
-						break;
+						return null;
 				}
-				trk=searchTruck("Availbillity",resp);
+				trk=searchTruck("Availability",resp);
 				if (trk.length==0){
 					System.out.println("No Results found");
 					break;
@@ -249,7 +259,7 @@ public class Track {
 			result = DB.executeQuery("SELECT * FROM Trucks WHERE Color LIKE '%"+value+"%'");
 			break;
 		case "Availability":
-			result = DB.executeQuery("SELECT * FROM Trucks WHERE License LIKE '%"+value+"%'");
+			result = DB.executeQuery("SELECT * FROM Trucks WHERE Availability LIKE '%"+value+"%'");
 			break;
 		case "All":
 			result = DB.executeQuery("SELECT * FROM Trucks");
@@ -296,7 +306,12 @@ public class Track {
 		return CarryingWeight;
 	}
 	public boolean checkIfDriverSuitable(Driver d){
-		return d.get_lisence()==license;
+		if (d.get_lisence()==License.C)
+			return true;
+		else if (d.get_lisence()==License.B)
+			return (license == License.B || license == License.A);
+		else
+			return (license == License.A);
 	}
 	
 	private License assignLicense(){
