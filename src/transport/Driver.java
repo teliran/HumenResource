@@ -8,6 +8,7 @@ import com.sun.java.util.jar.pack.DriverResource;
 
 import DB.DB;
 import Emp.Employee;
+import store.Store;
 import transport.TransManager.License;
 public class Driver extends Employee {
 	private License _lisence;
@@ -79,7 +80,7 @@ public class Driver extends Employee {
 
 
 	private static void showAvailableDrivers() {
-		Driver[] empArr = createDriverArr(Employee.searchEmployee("Position","driver"));	
+		Driver[] empArr = createDriverArr(Employee.getEmpOnShift(Store.currentDate, Position.driver));
 		for(int i=0; i<empArr.length; i++)
 			showDriver(empArr[i]);
 	}
