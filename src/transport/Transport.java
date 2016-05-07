@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Vector;
 import DB.DB;
+import store.Store;
 
 public class Transport {
 	private int ID;
@@ -181,36 +182,8 @@ public class Transport {
 		}
 			
 		// Date and Contacts
-		Date date=new Date(1,1,1);
-		System.out.println("Enter departure date (dd/MM/yyyy)");
-		flag=true;
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		while (flag){
-			try{
-				scan = new Scanner(System.in);
-				String str = scan.next();
-				date = sdf.parse(str);
-				flag=false;
-			}
-			catch(ParseException e){
-				 System.out.println("Invalid date");
-			}
-		 }
-		Date time=new Date(1);
-		System.out.println("Enter departure time (hh:mm)");
-		flag=true;
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
-		while (flag){
-			try{
-				scan = new Scanner(System.in);
-				String str = scan.next();
-				time = sdf2.parse(str);
-				flag=false;
-			}
-			catch(ParseException e){
-				System.out.println("Invalid hour");
-			}
-		}
+		Date date= Store.currentDate;
+		Date time = date;
 	    int contact=1;
 	    System.out.println("Enter contact number 9 digit");
 		flag=true;
@@ -474,7 +447,7 @@ public class Transport {
 			System.out.println("Destination address: " +trans[i].desAddress+".");
 			System.out.println("Departure date: " +trans[i].depDate+".");
 			System.out.println("Departure Time: " +trans[i].depTime+".");
-			System.out.println("Contect phone number: " +trans[i].contactPhone+".");
+			System.out.println("Contect phone number: 0" +trans[i].contactPhone+".");
 			System.out.println("Contact name: " +trans[i].contactName+".");
 			System.out.println("Document Number: " +trans[i].deocNum+".");
 			System.out.println("~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=");
