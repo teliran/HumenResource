@@ -1,11 +1,6 @@
 package transport;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
-
 import DB.DB;
-
 public class OrderDocument {
 	
 	private int _docId;

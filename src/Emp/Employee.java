@@ -351,6 +351,8 @@ public class Employee {
 		}
 		if(shift == null)
 			return new Employee[0];
+		if(!shift.getPosition().containsKey(pos))
+			return new Employee[0];
 		return shift.getPosition().get(pos).toArray(new Employee[0]);
 	}
 	

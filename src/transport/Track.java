@@ -1,10 +1,7 @@
 package transport;
-
-import java.awt.Color;
 import java.sql.ResultSet;
 import java.util.Scanner;
 import java.util.Vector;
-
 import DB.DB;
 import transport.TransManager.License;
 
@@ -278,7 +275,7 @@ public class Track {
 	
 	private void setWeightLimit(int limit) {
 		CarryingWeight = limit;
-		DB.executeUpdate("UPDATE Trucks set Carrying_Wieght = '"+limit+"' WHERE TruckID = "+truckID);
+		DB.executeUpdate("UPDATE Trucks set Carrying_Weight = '"+limit+"' WHERE TruckID = "+truckID);
 	}
 
 	private void setColor(String newColor) {

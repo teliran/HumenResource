@@ -102,7 +102,9 @@ public class Transport {
 				searchTrans();
 				break;
 			case 2:
-				addTrans();
+				Transport trans =addTrans(); 
+				if(trans != null)
+					prettyPrinting(new Transport[] {trans});
 				break;
 			case 3:
 				if(editTrans())
@@ -127,6 +129,10 @@ public class Transport {
 	private static void makeTransportArrival() {
 		System.out.println("Choose Transport that finished");
 		Transport[] tempt = searchTrans(on, "Status" );
+		if(tempt.length==0){
+			System.out.println("No truck in traffic");
+			return;
+		}
 		int select = TransManager.selectFromChoises(tempt);
 		setStatus(done, tempt[select].getID());
 		freeDriver(tempt[select].getDriverID());
@@ -465,7 +471,7 @@ public class Transport {
 		String value="";
 		boolean flag=true;
 		Transport[] t = new Transport[0];
-		System.out.println("Enter ID (enter 'quit' to exit tis menu)");
+		System.out.println("Enter ID (enter 'quit' to exit this menu)");
 		int ID=0;
 		String s="";
 		while(t.length!=1){

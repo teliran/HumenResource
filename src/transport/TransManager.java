@@ -1,13 +1,11 @@
 package transport;
 import java.util.Date;
-import java.nio.channels.ShutdownChannelGroupException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
-
 import DB.DB;
 /**
  * 
@@ -24,13 +22,7 @@ public class TransManager {
 			"Bread", "Eggs", "Chicken", "Beef", "Cereals", "TV", "Laptop", "Receiver", "Washing Machine", "HDMI cable"};
 	private static String[][] _sourceArr = {{"Supplier1N", "Supplier2N"}, {"Supplier3S", "Supplier4S"}};
 	private static String[][] _destArr = {{"dest1N", "dest2N"}, {"dest3S", "dest4S"}};
-	private String _user;
-	private String _password;
 	
-	public TransManager(String user, String pass) {
-		_user = user;
-		_password = pass;
-	}
 	public static int getLastId(String id, String table){
 		int ret = -1;
 		String query = "SELECT MAX("+id+") FROM "+table;

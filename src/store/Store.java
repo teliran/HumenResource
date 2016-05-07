@@ -10,7 +10,6 @@ import Emp.Constraint;
 import Emp.Employee;
 import Emp.Shift;
 import transport.TransManager;
-import transport.Transport;
 
 public class Store {
 	private String name;
@@ -23,13 +22,7 @@ public class Store {
 		this.name=name;
 		this.password=password;
 	
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(stringToDate("05/05/2016"));
-		cal.set(Calendar.HOUR_OF_DAY,17);
-		cal.set(Calendar.MINUTE,30);
-		cal.set(Calendar.SECOND,0);
-		cal.set(Calendar.MILLISECOND,0);
-		currentDate = cal .getTime();	
+		
 	}
 	
 	public static void main(String[] args) {

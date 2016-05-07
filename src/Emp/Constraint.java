@@ -9,6 +9,7 @@ import java.util.Vector;
 import DB.DB;
 import Emp.Shift.ShiftPart;
 import store.Store;
+import store.Store.Week;
 
 public class Constraint {
 	private int id;
@@ -94,6 +95,15 @@ public class Constraint {
 		}
 	}
 	
+	private static boolean isFree(int id , Week day){
+		Constraint[] arr = searchConstraint("ID", id+"");
+		for(Constraint cons : arr ){
+			if (cons.getDay().equals(day))
+				return false;
+		}
+		return true;
+	}
+	
 	public static Constraint addConstraint(){
 		System.out.println("Add New Constraint");
 		Employee myEmp = Employee.searchEmployee();
@@ -103,6 +113,10 @@ public class Constraint {
 		System.out.println("Enter Day Constraint:");
 		Store.Week[] dayArr = Store.Week.values();
 		int j = Store.selectFromMenu(dayArr);
+		if(! isFree(myEmp.getId(), dayArr[j])){
+			System.out.println("The selected day is not free");
+			return null;
+		}		
 		Store.Week day = dayArr[j];
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Please enter Constraint Start Hour (HH:mm 24Hr):");
@@ -261,8 +275,12 @@ public class Constraint {
 	}
 	
 	public void setDay(Store.Week day){
-		this.day = day;
-		DB.executeUpdate("UPDATE Constraints set Day = '"+day+"' WHERE ID ="+id);
+		if(! isFree(this.getId(), day)){
+			System.out.println("The selected day is not free");
+			return;
+		}
+		DB.executeUpdate("UPDATE Constraints set Day = '"+day+"' WHERE ID ="+id +" AND Day ='"+day+"'");
+		this.day = day;	
 	}
 
 	public Date getStartHour() {
@@ -272,7 +290,7 @@ public class Constraint {
 
 	public void setStartHour(Date startHour) {
 		this.startHour = startHour;
-		DB.executeUpdate("UPDATE Constraints set Start = '"+Store.setHour(startHour)+"' WHERE ID ="+id);
+		DB.executeUpdate("UPDATE Constraints set Start = '"+Store.setHour(startHour)+"' WHERE ID ="+id +" AND Day ='"+day+"'");
 	}
 
 	public Date getEndHour() {
@@ -281,7 +299,7 @@ public class Constraint {
 
 	public void setEndHour(Date endHour) {
 		this.endHour = endHour;
-		DB.executeUpdate("UPDATE Constraints set End = '"+Store.setHour(endHour)+"' WHERE ID ="+id);
+		DB.executeUpdate("UPDATE Constraints set End = '"+Store.setHour(endHour)+"' WHERE ID ="+id +" AND Day ='"+day+"'");
 	}
 
 

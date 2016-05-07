@@ -469,6 +469,10 @@ public class Shift {
 			System.out.println("No such Employee in givven shift");
 			return;
 		}
+		if(!secondShift.positions.containsKey(pos[i])){
+			System.out.println("No such Employee in givven shift");
+			return;
+		}
 		Employee[] empArr1 = secondShift.positions.get(pos[i]).toArray(new Employee[0]);
 		Employee secondEmp = empArr1[Store.selectFromMenu(empArr1)];		
 		if(secondShift.positions.get(pos[i]).contains(firstEmp)){
