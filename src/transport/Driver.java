@@ -237,6 +237,14 @@ public class Driver extends Employee {
 		}
 		return null;
 	}
+	public String get_available() {
+		return _available;
+	}
+	public void set_available(String set) {
+		this._available = set;
+		String query = "UPDATE Drivers set Available = '"+set+"' WHERE ID = "+this.getId();
+		DB.executeUpdate(query);
+	}
 	
 	
 	
