@@ -91,13 +91,15 @@ public class Driver extends Employee {
 	public static Driver showAvailableDrivers() {
 		Driver[] empArr = createDriverArr(Employee.getEmpOnShift(Store.currentDate, Position.driver));
 		Vector<Driver> vecd = new Vector<Driver>();
-		/*for(int i=0; i<empArr.length; i++){
-			String qry = "SELECT "
-		}*/
-		int select = TransManager.selectFromChoises(empArr);
+		for(int i=0; i<empArr.length; i++){
+			if (empArr[i].get_available().equals("YES"))
+				vecd.addElement(empArr[i]);
+		}
+		Driver[] cleanedArr = vecd.toArray(new Driver[0]);
+		int select = TransManager.selectFromChoises(cleanedArr);
 		if (select == -1)
 			return null;
-		return empArr[select];
+		return cleanedArr[select];
 	}
 
 	/**

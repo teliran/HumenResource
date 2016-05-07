@@ -230,6 +230,7 @@ public class Transport {
 			des = des+Helper.substring(0, endIndex);
 		}
 		tempTruck.setAvailabilty(false);
+		tempDriver.set_available("NO");
 		return new Transport(true,ID,driverID,truckID,des,from,date ,time,contact,con,deco);
 	}
 	
@@ -445,8 +446,8 @@ public class Transport {
 			System.out.println("Track ID: " +trans[i].truckID+".");
 			System.out.println("Departure address: " +trans[i].fromAddress+".");
 			System.out.println("Destination address: " +trans[i].desAddress+".");
-			System.out.println("Departure date: " +trans[i].depDate+".");
-			System.out.println("Departure Time: " +trans[i].depTime+".");
+			System.out.println("Departure date: " +Store.setFormat(trans[i].depDate)+".");
+			System.out.println("Departure Time: " +Store.setHour(trans[i].depTime)+".");
 			System.out.println("Contect phone number: 0" +trans[i].contactPhone+".");
 			System.out.println("Contact name: " +trans[i].contactName+".");
 			System.out.println("Document Number: " +trans[i].deocNum+".");
