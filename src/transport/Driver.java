@@ -12,13 +12,15 @@ import store.Store;
 import transport.TransManager.License;
 public class Driver extends Employee {
 	private License _lisence;
-
-	public Driver(boolean insert,Employee emp , License license) {
+	private String _available;
+	
+	public Driver(boolean insert,Employee emp , License license, String available) {
 		super(false, emp.getId(), emp.getName(), emp.getPosition(), emp.getBankNumber() ,emp.getAccountNumber(),emp.getStartDate(), emp.getSalaryPerHour());
 		this._lisence=license;
+		_available = available;
 		if (insert){
-			String query = "INSERT INTO Drivers (ID,License) " +
-	                   "VALUES ("+emp.getId()+",'"+license+"');";
+			String query = "INSERT INTO Drivers (ID,License,Available) " +
+	                   "VALUES ("+emp.getId()+",'"+license+"', 'YES');";
 			DB.executeUpdate(query);
 		}
 	}
@@ -88,9 +90,9 @@ public class Driver extends Employee {
 	//Here to put the choice
 	public static Driver showAvailableDrivers() {
 		Driver[] empArr = createDriverArr(Employee.getEmpOnShift(Store.currentDate, Position.driver));
+		Vector<Driver> vecd = new Vector<Driver>();
 		/*for(int i=0; i<empArr.length; i++){
-			//showDriver(empArr[i]);
-			System.out.println((i+1)+")  "+empArr[i]);
+			String qry = "SELECT "
 		}*/
 		int select = TransManager.selectFromChoises(empArr);
 		if (select == -1)
@@ -174,12 +176,23 @@ public class Driver extends Employee {
 		return lis;
 	}
 	
+	private static String getDriverAvailable(Employee d){
+		String ret = null;
+		ResultSet result = DB.executeQuery("SELECT * FROM Drivers WHERE ID = "+d.getId());
+		if(DB.next(result)){
+			ret= DB.getString(result, "Available");
+		}
+		DB.closeResult(result);
+		return ret;
+	}
+	
 	private static Driver[] createDriverArr (Employee[] empArr){
 		Vector<Driver> driversResult = new Vector<Driver>();
 		for(Employee emp : empArr){
 			License lic = getEmpLicense(emp);
+			String avl = getDriverAvailable(emp);
 			if(lic != null){
-				driversResult.add(new Driver(false, emp, lic));
+				driversResult.add(new Driver(false, emp, lic, avl));
 			}
 		}
 		return driversResult.toArray(new Driver[0]);
@@ -202,9 +215,11 @@ public class Driver extends Employee {
 			result = DB.executeQuery("SELECT * FROM Drivers WHERE License LIKE '%"+value+"%'");	
 			Vector<Integer> vecId = new Vector();
 			Vector<String> vecLic = new Vector();
+			Vector<String> vecAvl = new Vector();
 			while(DB.next(result)){
 				vecId.addElement(DB.getInt(result, "ID"));
 				vecLic.addElement(DB.getString(result, "License"));
+				vecAvl.addElement(DB.getString(result, "Available"));
 			}
 			DB.closeResult(result);
 			int i=0;
@@ -214,7 +229,7 @@ public class Driver extends Employee {
 					return new Driver[0];	
 				}				
 				Employee emp = empArr[0];
-				Driver tempD = new Driver(false, emp, License.valueOf(vecLic.elementAt(i)));
+				Driver tempD = new Driver(false, emp, License.valueOf(vecLic.elementAt(i)), vecAvl.elementAt(i));
 				driversResult.add(tempD);
 				i++;
 			}
