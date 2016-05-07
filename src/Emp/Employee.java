@@ -8,6 +8,7 @@ import java.util.Vector;
 import DB.DB;
 import Emp.Shift.ShiftPart;
 import store.Store;
+import transport.TransManager.License;
 
 public class Employee { 
 	private int id;
@@ -45,6 +46,19 @@ public class Employee {
 	                   "VALUES ("+id+", '"+name+"', '"+pos+"' ,'"+date+"',"+accountNumber+","+bankNumber+","+salaryPerHour+");";
 			DB.executeUpdate(query);
 		}
+	}
+	
+	public void createDriver(License lic){
+		ResultSet result = DB.executeQuery("SELECT * FROM Drivers WHERE ID = "+getId()+";");	
+		if(DB.next(result)){
+			DB.executeUpdate("UPDATE Drivers set License = '"+lic+"' WHERE ID ="+id);		
+		}
+		else{
+			String query = "INSERT INTO Drivers (ID,License) " +
+                "VALUES ("+getId()+", '"+lic+"');";
+			DB.executeUpdate(query);
+		}
+		DB.closeResult(result);
 	}
 	
 	//Getters AND Setters Methods
@@ -163,6 +177,15 @@ public class Employee {
 					Position[] posArr = Position.values();
 					int j = Store.selectFromMenu(Position.values());
 					emp.setPosition(posArr[j]);
+					// if position is driver , ask user which License
+					License lic = null;
+					if(posArr[j].equals(Position.driver)){
+						System.out.println("Enter Driver License:");
+						License[] license = License.values();
+						j = Store.selectFromMenu(license);
+						lic = license[j];
+						emp.createDriver(lic);
+					}
 					break;
 				case 3: // Edit account number
 					System.out.println("Please enter the new Account Number:");
@@ -204,6 +227,14 @@ public class Employee {
 		Position[] posArr = Position.values();
 		int j = Store.selectFromMenu(Position.values());
 		Position pos = posArr[j];
+		// if position is driver , ask user which License
+		License lic = null;
+		if(pos.equals(Position.driver)){
+			System.out.println("Enter Driver License:");
+			License[] license = License.values();
+			j = Store.selectFromMenu(license);
+			lic = license[j];
+		}
 		System.out.println("Enter Employee Bank Number:(2 digits)");
 		int bNum = Store.getNumber();
 		System.out.println("Enter Employee Account Number:(5 digits)");
@@ -212,7 +243,11 @@ public class Employee {
 		Date stDate = Store.stringToDate(sc.nextLine()); 
 		System.out.println("Enter Employee payment per hour:(int)");
 		int salary = Store.getNumber();
-		return new Employee(true, id, name, pos, bNum, accNum, stDate, salary);	
+		Employee emp =  new Employee(true, id, name, pos, bNum, accNum, stDate, salary);
+		if(lic != null){
+			emp.createDriver(lic);
+		}
+		return emp;
 	}
 	
 	/**
