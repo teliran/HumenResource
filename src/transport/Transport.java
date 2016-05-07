@@ -90,7 +90,7 @@ public class Transport {
 			System.out.println("1)   Search Transport");
 			System.out.println("2)   Add New Transport");
 			System.out.println("3)   Edit Transport");
-			System.out.println("4)   Delete Transport");
+			System.out.println("4)   End Transport");
 			System.out.println("5)   Show all");
 			System.out.println("6)   Return");
 			System.out.println("============================");
@@ -110,40 +110,7 @@ public class Transport {
 				else System.out.println("Update failed"); 
 				break;
 			case 4:
-				boolean flag=true;
-				Transport[] t = new Transport[0];
-				System.out.println("Enter transport ID (enter 'quit' to exit tis menu)");
-				int ID=0;
-				String s="";
-				while(t.length!=1){
-					while(flag){
-						try{
-							scan = new Scanner(System.in);
-							s =  scan.next();
-							if(s.equals("quit")){
-								ID=-1;
-								flag=false;
-							}
-							else{
-							ID=Integer.parseInt(s);
-							if (ID<0)
-								throw new NumberFormatException();
-							if (ID%1!=0)
-								throw new NumberFormatException();
-							flag = false;
-				
-						}
-						}
-						catch (NumberFormatException e){
-								System.out.println("Invalid ID");	
-						}		
-					}
-					if(ID!=-1)
-					t=searchTrans(ID+"","ID");
-					else break;
-				}
-				deleteTrans(ID+"");
-				System.out.println(ID+" Deleted successfully");
+				makeTransportArrival();
 				break;
 			case 5:
 				prettyPrinting(getTransArray(DB.executeQuery("SELECT * FROM Transport")));
@@ -152,6 +119,43 @@ public class Transport {
 				return;
 			}
 		}
+	}
+	/**
+	 * Updates the end of Transport, it arrived from supplier
+	 * And then frees the Relevant truck and driver
+	 */
+	private static void makeTransportArrival() {
+		System.out.println("Choose Transport that finished");
+		Transport[] tempt = searchTrans(on, "Status" );
+		int select = TransManager.selectFromChoises(tempt);
+		setStatus(done, tempt[select].getID());
+		freeDriver(tempt[select].getDriverID());
+		freeTruck(tempt[select].getTrackId());
+	}
+	
+	
+	
+	private static void freeTruck(int truckID2) {
+		Track[] tarr = Track.searchTruck("TruckID", ""+truckID2);
+		if (tarr.length==0){
+			System.out.println("No Truck to free");
+			return;
+		}
+		tarr[0].setAvailabilty(true);
+		
+	}
+	
+	private static void freeDriver(int driverID2) {
+		Driver[] darr = Driver.searchDriver("ID", ""+driverID2);
+		if (darr.length==0){
+			System.out.println("No Driver to free");
+			return;
+		}
+		darr[0].set_available("YES");
+	}
+	
+	private static void setStatus(String set, int transId) {
+		DB.executeUpdate("UPDATE Transport set Status = '"+set+"' WHERE ID = "+transId);
 	}
 	
 	public static Transport addTrans(){
@@ -268,7 +272,7 @@ public class Transport {
 		switch(choice){
 		case(1):
 			type="ID";
-		System.out.println("Enter driver ID");
+		System.out.println("Enter Trans ID");
 		int ID=0;
 		while(flag){
 			try{
@@ -435,6 +439,7 @@ public class Transport {
 		prettyPrinting(toPrint);
 		return toPrint;
 	}
+	
 	public static void prettyPrinting(Transport[] trans){
 		if (trans.length==0)
 			System.out.println("There are no items to show");
@@ -667,40 +672,43 @@ public class Transport {
 		temp =temp+" WHERE ID="+ID;
 		return DB.executeUpdate(temp);
 	}
+	
 	public static Transport[] searchTrans(String value, String filde){
 		String tmp = "SELECT * FROM Transport WHERE ";
 		switch (filde){
 		case("ID"):
 			tmp=tmp+"ID="+value;
-		break;
+			break;
 		case("driverID"):
 			tmp = tmp+"driverID LIKE '%"+value+"%';";	
-		break;
+			break;
 		case("truckID"):
 			tmp = tmp+"truckID LIKE '%"+value+"%'";
-		break;
+			break;
 		case("desAddress"):
 			tmp = tmp+"desAddress LIKE '%"+value+"%'";
-		break;
+			break;
 		case("fromAddress"):
 			tmp = tmp+"fromAddress LIKE '%"+value+"%'";
-		break;
+			break;
 		case("depDate"):
 			tmp = tmp+"depDate LIKE '%"+value+"%'";
-		break;
+			break;
 		case("depTime"):
 			tmp = tmp+"depTime LIKE '%"+value+"%'";
-		break;
+			break;
 		case("contactPhone"):
 			tmp = tmp+"contactPhone LIKE '%"+value+"%'";
-		break;
+			break;
 		case("contactName"):
 			tmp = tmp+"contactName LIKE '%"+value+"%'";
-		break;
+			break;
 		case("deocNum"):
 			tmp = tmp+"deocNum LIKE '%"+value+"%'";
-		break;
-			
+			break;
+		case ("Status"):
+			tmp = tmp+"Status LIKE '%"+value+"%'";
+			break;
 		default:
 			return null;
 		}
@@ -742,6 +750,11 @@ public class Transport {
 	}
 	public static boolean deleteTrans(String ID){
 		return DB.executeUpdate("DELETE FROM Transport Where ID="+ID);
+	}
+	@Override
+	public String toString() {
+		return "Transport [ID=" + ID + ", driverID=" + driverID + ", truckID=" + truckID + "\n" +", desAddress=" + desAddress
+				+ ", fromAddress=" + fromAddress + ", depDate=" + Store.setFormat(depDate) + ", depTime=" + Store.setHour(depTime) + "]";
 	}
 
 }
