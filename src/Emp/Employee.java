@@ -19,7 +19,7 @@ public class Employee {
 	private Date startDate;
 	private int salaryPerHour;
 	public static enum Position{hrManager, stockManager, storeKeeper, 
-		cashier, driver, storeManager, shiftManager};
+		cashier, driver, storeManager, shiftManager ,logisticManager};
 	/* 
 	 * hrManger - מנהל כוח אדם
 	 * stockManager - מנהל מלאי
@@ -28,6 +28,7 @@ public class Employee {
 	 * driver - נהג
 	 * storeManager - מנהל חנות
 	 * shiftManager - מנהל משמרת
+	 * logisticManager - מנהל לוגיסטי
 	 */
 	
 	//Construct	

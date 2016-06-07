@@ -10,24 +10,25 @@ import Emp.Constraint;
 import Emp.Employee;
 import Emp.Employee.Position;
 import Emp.Shift;
+import Init.Init;
 import transport.TransManager;
 
 public class Store {
 	private String name;
-	private String password;
 	public static enum Week{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday};
 	public static Date currentDate  = new Date();
 	public static Position user;
+	private static Init init;
 	
 	
-	public Store(String name, String password){
+	public Store(String name){
 		this.name=name;
-		this.password=password;
 	}
 	
 	public static void main(String[] args) {
 		DB.open();
-		Store store = new Store("Emart Store","1234");
+		init = new Init();
+		Store store = new Store("Emart Store");
 		store.showMenu();
 		DB.close();
 	}
@@ -49,7 +50,7 @@ public class Store {
 	}
 
 	public void showMenu(){	
-		int userInput;
+		int userInput, index=0;
 		System.out.println("Welcome to "+name+"!");
 		login();
 		while (true){
@@ -58,7 +59,9 @@ public class Store {
 			System.out.println("2.\t Shifts");
 			System.out.println("3.\t Constraint");
 			System.out.println("4.\t Transport");
-			System.out.println("5.\t Exit");	
+			System.out.println("5.\t Supplier");
+			System.out.println("6.\t Storage");
+			System.out.println("7.\t Exit");	
 			userInput = getNumber();
 			switch (userInput){
 			case 1:
@@ -73,7 +76,14 @@ public class Store {
 			case 4:
 				TransManager.showMainMenu();
 				break;
-			case 5: //EXIT
+			case 5: //supplier
+				init.getSupplierPl().run();
+				break;
+			case 6: //storage
+				init.getStorePl().run();
+				break;
+			case 7: //EXIT
+				//init.close();
 				return;			
 			}
 		}	
