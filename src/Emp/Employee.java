@@ -132,11 +132,21 @@ public class Employee {
 	public static void showMenu(){
 		int usrInput;
 		while(true){
+			int index=0;
 			System.out.println("==Employee==");
-			System.out.println("1.\t Add new Employee");
-			System.out.println("2.\t Search Employee");
-			System.out.println("3.\t Back");
+			if(Store.user.equals(Position.hrManager))
+				System.out.println((++index)+".\t Add new Employee");
+			System.out.println((++index)+".\t Search Employee");
+			System.out.println((++index)+".\t Back");
 			usrInput = Store.getNumber();
+			if(Store.user.equals(Position.storeManager)){
+				if(usrInput == 2)
+					usrInput=3;
+				else if(usrInput == 3)
+					continue;
+				else
+					usrInput++;
+			}
 			switch(usrInput){
 				case 1:
 					showCard(addEmployee());
@@ -168,6 +178,10 @@ public class Employee {
 			System.out.println("6.\t Delete Employee");
 			System.out.println("7.\t Back");
 			usrInput = Store.getNumber();
+			if(Store.user.equals(Position.storeManager) && usrInput != 7){
+				System.out.println("Manager Cannot Change Items!");
+				continue;
+			}
 			switch(usrInput){
 				case 1: //edit name
 					System.out.println("Please enter the new name:");

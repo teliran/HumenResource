@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.Vector;
 import DB.DB;
+import Emp.Employee.Position;
 import Emp.Shift.ShiftPart;
 import store.Store;
 import store.Store.Week;
@@ -37,11 +38,21 @@ public class Constraint {
 	public static void showMenu(){
 		int usrInput;
 		while(true){
+			int index=0;
 			System.out.println("==Constraints==");
-			System.out.println("1.\t Add New Constraint");
-			System.out.println("2.\t Search Constraints");
-			System.out.println("3.\t Back");
+			if(Store.user.equals(Position.hrManager))
+				System.out.println((++index)+".\t Add New Constraint");
+			System.out.println((++index)+".\t Search Constraints");
+			System.out.println((++index)+".\t Back");
 			usrInput = Store.getNumber();
+			if(Store.user.equals(Position.storeManager)){
+				if(usrInput == 2)
+					usrInput=3;
+				else if(usrInput == 3)
+					continue;
+				else
+					usrInput++;
+			}
 			switch(usrInput){
 				case 1:
 					showCard(addConstraint());
@@ -71,6 +82,10 @@ public class Constraint {
 			System.out.println("4.\t Delete Constraint");
 			System.out.println("5.\t Back");
 			usrInput = Store.getNumber();
+			if(Store.user.equals(Position.storeManager) && usrInput != 5){
+				System.out.println("Manager Cannot Change Items!");
+				continue;
+			}
 			switch(usrInput){
 				case 1:
 					System.out.println("Please select the new Day:");

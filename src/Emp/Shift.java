@@ -52,12 +52,21 @@ public class Shift {
 	public static void showMenu(){
 		int usrInput;
 		while(true){
+			int index=0;
 			System.out.println("==Shifts==");
-			System.out.println("1.\t Show Shifts History");
-			System.out.println("2.\t Make Shift For Next Week");
-			System.out.println("3.\t Swap Shift");
-			System.out.println("4.\t Back");
+			System.out.println((++index)+".\t Show Shifts History");
+			if(Store.user.equals(Position.hrManager)){
+				System.out.println((++index)+".\t Make Shift For Next Week");
+				System.out.println((++index)+".\t Swap Shift");
+			}
+			System.out.println((++index)+".\t Back");
 			usrInput = Store.getNumber();
+			if(Store.user.equals(Position.storeManager)){
+				if(usrInput == 2)
+					usrInput=4;
+				else if(usrInput > 1)
+					continue;
+			}
 			switch(usrInput){
 				case 1:
 					history();					

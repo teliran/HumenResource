@@ -50,19 +50,49 @@ public class Store {
 	}
 
 	public void showMenu(){	
-		int userInput, index=0;
+		int userInput;
 		System.out.println("Welcome to "+name+"!");
 		login();
 		while (true){
+			int index =0;
 			System.out.println("Main Menu :");
-			System.out.println("1.\t Employees");
-			System.out.println("2.\t Shifts");
-			System.out.println("3.\t Constraint");
-			System.out.println("4.\t Transport");
-			System.out.println("5.\t Supplier");
-			System.out.println("6.\t Storage");
-			System.out.println("7.\t Exit");	
+			if(user.equals(Position.hrManager) || user.equals(Position.storeManager)){
+				System.out.println((++index)+".\t Employees");
+				System.out.println((++index)+".\t Shifts");
+				System.out.println((++index)+".\t Constraint");
+			}
+			if(user.equals(Position.logisticManager) || user.equals(Position.storeManager)){
+				System.out.println((++index)+".\t Transport");
+			}
+			if(user.equals(Position.storeKeeper) || user.equals(Position.storeManager)){
+				System.out.println((++index)+".\t Supplier");
+				System.out.println((++index)+".\t Storage");
+			}
+			System.out.println((++index)+".\t Exit");	
 			userInput = getNumber();
+			if(user.equals(Position.hrManager)){
+				if(userInput ==4)
+					userInput=7;
+				else if (userInput >4 )
+					continue;
+			}
+			if(user.equals(Position.logisticManager)){
+				if(userInput ==2)
+					userInput=7;
+				else if (userInput > 2 )
+					continue;
+				else
+					userInput+= 3;
+			}
+			if(user.equals(Position.storeKeeper)){
+				if(userInput ==3)
+					userInput=7;
+				else if (userInput >3 )
+					continue;
+				else
+					userInput+= 4;
+			}
+				
 			switch (userInput){
 			case 1:
 				Employee.showMenu();
@@ -90,7 +120,7 @@ public class Store {
 	}
 	
 	public void login(){
-		Position[] pos = Position.values();
+		Position[] pos = {Position.hrManager,Position.storeKeeper,Position.storeManager,Position.logisticManager};
 		System.out.println("Please Select Your Position:");
 		int ans = selectFromMenu(pos);
 		user = pos[ans];
