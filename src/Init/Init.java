@@ -48,5 +48,8 @@ public class Init
 	{
 		return m;
 	}
-	
+	public void closeConnection()
+	{
+		abl.CloseConnection();
+	}
 }
