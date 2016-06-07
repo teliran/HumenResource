@@ -8,6 +8,7 @@ import java.util.Scanner;
 import DB.DB;
 import Emp.Constraint;
 import Emp.Employee;
+import Emp.Employee.Position;
 import Emp.Shift;
 import transport.TransManager;
 
@@ -16,13 +17,12 @@ public class Store {
 	private String password;
 	public static enum Week{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday};
 	public static Date currentDate  = new Date();
+	public static Position user;
 	
 	
 	public Store(String name, String password){
 		this.name=name;
 		this.password=password;
-	
-		
 	}
 	
 	public static void main(String[] args) {
@@ -80,16 +80,11 @@ public class Store {
 	}
 	
 	public void login(){
-		Scanner sc = new Scanner(System.in);
-		while(true){
-			System.out.println("Please Enter The password :");		
-			String password = sc.nextLine();		
-			if(password.equals(this.password)){
-				System.out.println("Great! You logged in !!");
-				return;
-			}
-			System.out.println("Wrong password! , Please try again");		
-		}	
+		Position[] pos = Position.values();
+		System.out.println("Please Select Your Position:");
+		int ans = selectFromMenu(pos);
+		user = pos[ans];
+		System.out.println("Login successfully!");
 	}
 	
 	public static int getNumber(){
