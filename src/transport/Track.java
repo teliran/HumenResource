@@ -3,6 +3,8 @@ import java.sql.ResultSet;
 import java.util.Scanner;
 import java.util.Vector;
 import DB.DB;
+import Emp.Employee.Position;
+import store.Store;
 import transport.TransManager.License;
 
 public class Track {
@@ -42,6 +44,14 @@ public class Track {
 			System.out.println("--------Trucks Menu--------");
 			System.out.println("============================");
 			selection = TransManager.getInputNumber();
+			//added 12.06.2016
+			if (Store.user.equals(Position.storeManager)){
+				if (selection==2){
+					System.out.println("Store Manager can not perform this action!");
+					continue;
+				}
+			}
+			//---------------
 			switch (selection){
 			case 1:
 				showTruck(searchTruck());
@@ -104,6 +114,14 @@ public class Track {
 			System.out.println("-----------Truck: "+truck.getTrackID()+"----------");
 			System.out.println("===================================");
 			selection = TransManager.getInputNumber();
+			//----added 14.06.16
+			if (Store.user.equals(Position.storeManager)){
+				if (selection!=5){
+					System.out.println("Store Manager can not perform this action!");
+					continue;
+				}
+			}
+			//---------------
 			switch(selection){
 				case 1: //edit color
 					System.out.println("Please enter the new Color:");

@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Vector;
 import DB.DB;
+import Emp.Employee.Position;
 import store.Store;
 
 public class Transport {
@@ -97,6 +98,14 @@ public class Transport {
 			System.out.println("--------Transport Menu--------");
 			System.out.println("============================");
 			selection = TransManager.getInputNumber();
+			//added 12.06.2016
+			if (Store.user.equals(Position.storeManager)){
+				if (selection==2 || selection==3 || selection==4){
+					System.out.println("Store Manager can not perform this action!");
+					continue;
+				}
+			}
+			//---------------
 			switch (selection){
 			case 1:
 				searchTrans();
