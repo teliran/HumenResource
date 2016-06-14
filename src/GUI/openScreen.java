@@ -1,5 +1,4 @@
 package GUI;
-
 import BL.IBL;
 import Emp.Employee.Position;
 import store.Store;
@@ -9,7 +8,8 @@ public  class openScreen {
 	String[] menu;
 	Boolean[] manager;
 	Boolean[] storekeeper;
-	public openScreen(IBL bl){
+	public openScreen(IBL bl)
+	{
 		this.bl=bl;
 		menu=new String[4];
 		storekeeper=new Boolean[4];

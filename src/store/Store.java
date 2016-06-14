@@ -31,6 +31,7 @@ public class Store {
 		Store store = new Store("Emart Store");
 		store.showMenu();
 		DB.close();
+		init.closeConnection();
 	}
 	
 	/**
