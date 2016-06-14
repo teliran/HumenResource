@@ -118,7 +118,7 @@ public class Order_DAL {
 	}	
 	
 	private void updateQuantitysInOrder(int orderId,String supId, String catNum, double quantity)
-	{
+	{ 
 		String query="SELECT * FROM order_product_supply WHERE order_id=? AND supplier_id =? AND catalog_number=?";
 		PreparedStatement pst=null;
 		ResultSet rs=null;
