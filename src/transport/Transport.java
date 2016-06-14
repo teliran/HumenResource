@@ -98,7 +98,7 @@ public class Transport {
 			System.out.println("--------Transport Menu--------");
 			System.out.println("============================");
 			selection = TransManager.getInputNumber();
-			//added 12.06.2016
+			//added 12.06.2016---
 			if (Store.user.equals(Position.storeManager)){
 				if (selection==2 || selection==3 || selection==4){
 					System.out.println("Store Manager can not perform this action!");

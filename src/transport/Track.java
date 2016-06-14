@@ -114,7 +114,7 @@ public class Track {
 			System.out.println("-----------Truck: "+truck.getTrackID()+"----------");
 			System.out.println("===================================");
 			selection = TransManager.getInputNumber();
-			//----added 14.06.16
+			//----added 14.06.16---
 			if (Store.user.equals(Position.storeManager)){
 				if (selection!=5){
 					System.out.println("Store Manager can not perform this action!");
