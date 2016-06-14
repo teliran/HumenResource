@@ -189,4 +189,6 @@ public interface IBL {
        * @return 1 if close , else 0 .
        */
       int CloseConnection();
+      
+      void editOrder(Order order) throws AccessDeniedException;
 }
