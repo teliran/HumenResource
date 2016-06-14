@@ -222,7 +222,6 @@ private BL.IBL b;
 						
 					try {
 						boolean bo = bl_bl.IsProductExists( p.getManufactureID(), p.getManufactureProdID());
-						System.out.println(bo);
 						if(bo){
 							manID.add(p.getManufactureID());						
 							productManID.add(p.getManufactureProdID());
@@ -232,9 +231,7 @@ private BL.IBL b;
 							products.add(p);
 							
 						}
-						else{
-							System.out.println("product not found");
-						}
+
 					} catch (AccessDeniedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -254,9 +251,7 @@ private BL.IBL b;
 							products.add(p);
 							
 						}
-						else{
-							System.out.println("product not found");
-						}
+
 					} catch (AccessDeniedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
