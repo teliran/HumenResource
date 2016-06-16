@@ -101,6 +101,9 @@ public class Order_DAL {
 				 pst.executeUpdate();
 				 pst.close();
 				 rs.close();
+				 List<ProductQun> orderProducts=newEntity.getProductsList();
+				 for(ProductQun p:orderProducts)
+					 updateQuantitysInOrder(orderId, newEntity.getSupNum(), p.getPro().getCatNum() ,p.getQun());
 				 return null;
 			}
 			else //rs is empty means there were not result for the query
@@ -113,7 +116,43 @@ public class Order_DAL {
 			throw new AccessDeniedException("Error: to update an order details.");
 		}
 	}	
-
+	
+	private void updateQuantitysInOrder(int orderId,String supId, String catNum, double quantity)
+	{ 
+		String query="SELECT * FROM order_product_supply WHERE order_id=? AND supplier_id =? AND catalog_number=?";
+		PreparedStatement pst=null;
+		ResultSet rs=null;
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setInt(1, orderId);
+			pst.setString(2, supId);
+			pst.setString(3, catNum);
+			rs=pst.executeQuery();
+			if(rs.next())
+			{
+				 pst = conn.prepareStatement("UPDATE order_product_supply SET quantity = ? WHERE order_id=? AND supplier_id =? AND catalog_number=?");
+				// pst = conn.prepareStatement(query);
+			   	 pst.setDouble(1, quantity);
+			   	 pst.setInt(2, orderId);
+				 pst.setString(3, supId);
+				 pst.setString(4, catNum);
+				 pst.execute();
+				 pst.close();
+				 rs.close();
+			}
+			else //rs is empty means there were not result for the query
+			{
+				rs.close();
+			}
+		} catch (SQLException e) 
+		{
+			try {
+				throw new AccessDeniedException("Error: to update an order.");
+			} catch (AccessDeniedException e1) {
+				System.out.println("an error while edit an product quantity");
+			}
+		}
+	}
 	protected int GetMaxOrderId() throws AccessDeniedException
 	{
 		String query="SELECT Max(id) FROM orders";

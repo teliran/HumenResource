@@ -358,6 +358,11 @@ public class Entity_BL implements  IBL{
 	}
 
 ///////////////////////////////////////////////////////////////////
+	@Override
+	public void editOrder(Order order) throws AccessDeniedException {
+		order.getPrice();
+		itsDAL.EditOrder(order.getOrderID(), order);
+	}
 
 	
 }

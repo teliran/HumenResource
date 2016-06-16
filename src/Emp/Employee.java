@@ -372,6 +372,29 @@ public class Employee {
 	}
 	
 	/**
+	 * request employee for shift
+	 * @param date the date we need that employees
+	 * @param pos the position that we needed
+	 * @param amount the amount of employee that we need at this date
+	 */
+	public static void requestEmployee(Date date ,Position pos , int amount){
+		Shift shift=null;
+		Date start =Store.stringToHour("07:00");
+		Date morning =Store.stringToHour("15:00");
+		Date evening =Store.stringToHour("23:00");
+		if(date.getHours() >= start.getHours() && date.getHours() <= morning.getHours()){ // morning
+			shift = Shift.searchByDate(date, ShiftPart.morning);
+		}
+		else if ( date.getHours() >= morning.getHours() && date.getHours()<=evening.getHours()){ //evening
+			shift= Shift.searchByDate(date, ShiftPart.evening);
+		}
+		if(shift == null)
+			return;
+		shift.setAmount(pos, amount);
+		int yakir=0;
+	}
+	
+	/**
 	 * Create Employee array from ResultSet
 	 * @param result from what we build the array
 	 * @return Array of Employee

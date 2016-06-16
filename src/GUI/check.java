@@ -26,6 +26,7 @@ public final class check {
 		}
 		return Integer.parseInt(opt);
 	}
+	
 	public static int checkIntWithNoWhile(String num){
 		
 		

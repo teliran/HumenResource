@@ -301,8 +301,6 @@ public class PLmanagment {
 		{
 		case 1:
 			bl.orderMinimumProduct();
-			bl.CloseConnection();
-			
 			return false;
 		
 		case 2:
@@ -316,10 +314,13 @@ public class PLmanagment {
 			break;
 		case 5:
 			ReportMenue();
-		default:
+			break;
+		default:{
+
 			return false;
 		}
-		return false;
+		}
+		return true;
 		
 	}
 	

@@ -92,6 +92,7 @@ public class Shift {
 		DB.closeResult(result);
 		return false;	
 	}
+
 	
 	public static void hasShiftNextWeek(){
 		int usrInput;

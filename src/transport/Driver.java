@@ -1,14 +1,21 @@
 package transport;
 import java.sql.*;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.Vector;
 import DB.DB;
 import Emp.Employee;
+import Emp.Employee.Position;
 import store.Store;
 import transport.TransManager.License;
 public class Driver extends Employee {
 	private License _lisence;
 	private String _available;
+	
+	/* TO Hen Rosenberg
+	 * if you need drives at some date:
+	 * Employee.requestEmployee(date(date with time) ,Position.driver,amount);
+	 */
 	
 	public Driver(boolean insert,Employee emp , License license, String available) {
 		super(false, emp.getId(), emp.getName(), emp.getPosition(), emp.getBankNumber() ,emp.getAccountNumber(),emp.getStartDate(), emp.getSalaryPerHour());
