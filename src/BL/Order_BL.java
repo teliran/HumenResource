@@ -11,6 +11,7 @@ import java.util.List;
 
 import DAL.AccessDeniedException;
 import DAL.IDAL;
+import transport.TransManager;
 
 public class Order_BL {
 
@@ -136,7 +137,7 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 			Order or= new Order(orderID, supNum, date, time, price, productsList);
 			dal.AddOrder(or);
 			dal.UpdateProductInOrder(orderID, supNum, proQun, true);
-			giveOrderDoc(or, ((Supplier)dal.SearchSupplierById(supNum)).getArea());  
+			TransManager.giveOrderDoc(or, ((Supplier)dal.SearchSupplierById(supNum)).getArea());  
 		}
 	}
 
