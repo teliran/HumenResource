@@ -1,18 +1,23 @@
 package transport;
 import java.util.HashMap;
+import java.util.List;
+
+import Backend.Order;
+import Backend.ProductQun;
 import DB.DB;
 public class OrderDocument {
 	
 	private int _docId;
 	private String _dest;
 	private String _source;
-	private HashMap<String, Integer> _supply;
+	//private HashMap<String, Integer> _supply;
+	private List<ProductQun> _productsList;
 	
-	public OrderDocument(String source, String dest) {
-		_source = source;
+	public OrderDocument(Order ord, String dest) {
+		_source = ord.getSupNum();
 		_dest = dest;
 		_docId = TransManager.getDocId();
-		_supply = initMap();
+		_productsList = ord.getList();
 		
 	}
 	
@@ -25,26 +30,28 @@ public class OrderDocument {
 	public String get_source() {
 		return _source;
 	}
-	public HashMap<String, Integer> get_supply() {
-		return _supply;
+	public List<ProductQun> get_productsList() {
+		return _productsList;
 	}
 	
-	public void addSupply(String product, int amount){
+	/*public void addSupply(String product, int amount){
 		if (_supply.containsKey(product)){
 			System.out.println("Product already entered");
 		}
 		else
 			_supply.put(product, amount);
-	}
+	}*/
 	public void addDoc(int transId){
-		for (String p: _supply.keySet()){
-			String query ="INSERT INTO Doc_History (DocID, TransID, Product, Amount, Source, Dest) " +
-                "VALUES ("+_docId+", "+transId+", '"+p+"', "+_supply.get(p)+", '"+_source+"', '"+_dest+"');";
+		for (ProductQun p: _productsList){
+			String query ="INSERT INTO Doc_History (DocID, TransID, ProductID, ManufID ,Amount, SupplierId, Dest) " +
+                "VALUES ("+_docId+", "+transId+", '"+p.getPro().getCatNum()+
+                "', '"+p.getPro().getManID()+"', "+(int)(p.getQun())+", '"+_source+"' , '"+_dest+"');";
 			DB.executeUpdate(query);
 		}
 	}
 	
-	private HashMap<String, Integer> initMap(){
+	
+	/*private HashMap<String, Integer> initMap(){
 		HashMap<String, Integer> ret = new HashMap<>();
 		int leng = TransManager.get_productsArr().length;
 		int numOfproduct = (int)(Math.random()*leng)+1;
@@ -57,6 +64,7 @@ public class OrderDocument {
 			memo[p]=1;
 		}
 		return ret;
-	}
+	}*/
+
 	
 }

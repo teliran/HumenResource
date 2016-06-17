@@ -1,11 +1,15 @@
 package transport;
 import java.util.Date;
+import java.util.HashMap;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.util.Vector;
+
+import Backend.Order;
 import DB.DB;
 /**
  * 
@@ -17,12 +21,12 @@ public class TransManager {
 	public static final int north = 0, south = 1;
 	private static int _docID = getLastId("DocID", "Doc_History");
 	private static int _ID = getLastId("ID", "Transport");
-	private static  String[] _productsArr={"Tomato", "Onion", "Cucamber", "Lemon", "Apple", "Pich", "Pasta", "Rice",
-			"Flour", "Olive Oil", "Canola Oil", "Hummus", "Coca-Cola Zero", "Mineral Water", "Coockies", "Toilet Paper",
-			"Bread", "Eggs", "Chicken", "Beef", "Cereals", "TV", "Laptop", "Receiver", "Washing Machine", "HDMI cable"};
-	private static String[][] _sourceArr = {{"Supplier1N", "Supplier2N"}, {"Supplier3S", "Supplier4S"}};
-	private static String[][] _destArr = {{"dest1N", "dest2N"}, {"dest3S", "dest4S"}};
-	
+	private static String[][] _destArr = {{"SuperLee NorthWest", "SuperLee NorthEast"}, {"SuperLee SouthWest", "SuperLee SouthEast"}};
+	private static int _area;
+	//private static Order _ord = null;
+	private static HashMap<Integer, Order> tranOrdersMap = new HashMap<>();// maps a transportID to the Order
+	private static Vector<Order> ordVec = new Vector<>(); //saves given orders when program is active
+	private static boolean hasOrder;
 	public static int getLastId(String id, String table){
 		int ret = -1;
 		String query = "SELECT MAX("+id+") FROM "+table;
@@ -43,13 +47,6 @@ public class TransManager {
 	public static int getId(){
 		_ID++;
 		return _ID;
-	}
-	public static String[] get_productsArr() {
-		return _productsArr;
-	}
-
-	public static String[][] get_sourceArr() {
-		return _sourceArr;
 	}
 
 	public static String[][] get_destArr() {
@@ -78,11 +75,42 @@ public class TransManager {
 				return selection-1;
 		}
 	}
+	//--------------------------------------------------------------------------------------
+	//-------------------------------Added in 17.06.16---------------------------------------	
+	//--------------------------------------------------------------------------------------
+	public static Order getOrderFromMap(int transId){
+		Order ret = null;
+		if (tranOrdersMap.containsKey(transId))
+			ret = tranOrdersMap.get(transId);
+		return ret;
+	}
+	public static void giveNewOrder(Order or, String area) {
+		if (area.equals("North")|| area.equals("north")){
+			_area = 0;
+			//_ord = new Order(or);
+			Order ord = new Order(or);
+			ordVec.addElement(ord);
+			hasOrder = true;
+		}
+		else if (area.equals("South")|| area.equals("south")){
+			_area = 1;
+			//_ord = new Order(or);
+			Order ord = new Order(or);
+			ordVec.addElement(ord);
+			hasOrder = true;
+		}
+		else System.out.println("Areas are: North or South, order did not received!");
+	}
 	
 	public static String  giveOrderDoc(int transId){
+		if (!hasOrder){
+			return null;
+		}
+		Order ord = ordVec.remove(0);
+		tranOrdersMap.put(transId, ord);
 		String ret ="";
-		int zone = (int) (Math.random()*2);
-		String tempSource = _sourceArr[zone][(int)Math.random()*_sourceArr[zone].length];
+		int zone = _area;
+		String tempSource = ord.getSupNum();
 		int destNum = (int)(Math.random()*_destArr[zone].length)+1;
 		int[]memo = new int[_destArr[zone].length];
 		for (int i=0; i<destNum; i++){
@@ -91,13 +119,20 @@ public class TransManager {
 				p = (int) (Math.random()*_destArr[zone].length);
 			String tempDest = _destArr[zone][p];
 			memo[p]=1;
-			OrderDocument doc = new OrderDocument(tempSource, tempDest);
-			doc.addDoc(transId);
-			ret = ret+doc.get_docId()+"@"+tempSource+"@"+tempDest+"%";
+			if (ord!=null){
+				OrderDocument doc = new OrderDocument(ord, tempDest);
+				doc.addDoc(transId);
+				ret = ret+doc.get_docId()+"@"+tempSource+"@"+tempDest+"%";
+			}
 		}
+		if (ordVec.isEmpty())
+			hasOrder = false;
 		return ret;
 	}
-	
+//--------------------------------------------------------------------------------------	
+//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------	
+//--------------------------------------------------------------------------------------
 	public static int getInputNumber(){
 		Scanner sc = new Scanner(System.in);
 		while(true){
@@ -197,5 +232,6 @@ public class TransManager {
 				}
 			}
 		}
+
 		
 }

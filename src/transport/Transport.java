@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Vector;
+
+import Backend.Order;
 import DB.DB;
 import Emp.Employee.Position;
 import store.Store;
@@ -146,6 +148,16 @@ public class Transport {
 		setStatus(done, tempt[select].getID());
 		freeDriver(tempt[select].getDriverID());
 		freeTruck(tempt[select].getTrackId());
+//-----------------------------------------------------------------------------------
+//------------------------------17.06.16---------------------------------------------
+//When a transport has arrived it brings back a list of products inside the object or
+// as seen in the following marked areas, the notes marks -'//' should be removed when we 
+// can see the function - updateStoreSupply(Order or)
+//-----------------------------------------------------------------------------------
+		// This is Where we call the ReStock function
+		//Order or = TransManager.getOrderFromMap(tempt[select].getID());
+		//if (or!=null)
+		//	updateStoreSupply(or);//need to get this method from stock module
 	}
 	
 	
@@ -227,6 +239,10 @@ public class Transport {
 		String des="";
 		String from="";
 		String temp  = TransManager.giveOrderDoc(ID);
+		if (temp == null){
+			System.out.println("No Order Pending");
+			return null;
+		}
 		while(temp.length()!=0){
 			int endIndex=0;
 			while(temp.charAt(endIndex)!='%')
