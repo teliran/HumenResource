@@ -25,6 +25,7 @@ import DAL.AccessDeniedException;
 		 String manuNum= "";
 		 String area;
 		 double price;
+		 double weight;
 		
 		 System.out.println("Please enter CatNum: ");
 		 boolean flag= false;
@@ -68,6 +69,13 @@ import DAL.AccessDeniedException;
 		 if (price==0)
 			 return "quiting"; 
 		 
+		 /**********************************
+		  * 
+		  */
+		 System.out.println("Please enter weight: ");
+		 weight= check.checkDoub("wrong input... \n please enter a positive weight for the product \n");
+		 if (weight==0)
+			 return "quiting";
 		
 		 List<SupIdSearchable> manList= null;
 			try {
@@ -96,7 +104,7 @@ import DAL.AccessDeniedException;
 			 if (manuNum.equals("0"))
 				 return "quiting"; 
 		 List<Discount> list= new LinkedList<Discount>();
-		 Product pro= new Product(name, manuNum ,CatNum, manID,area, price, list);
+		 Product pro= new Product(name, manuNum ,CatNum, manID,area, price, list,weight);
 		 System.out.println(pro.getManuNum());
 		 try {
 			 ans=bl.AddByAgreement(supID, signDate, pro);

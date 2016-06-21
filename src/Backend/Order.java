@@ -14,7 +14,8 @@ public class Order implements Entity,IdSearchable,SupIdSearchable
 	private Time time;
 	private double totalPrice;
 	private List<ProductQun> productsList;
-
+	private String area;
+	
 	//////////////////
 	///Constructors///
 	//////////////////
@@ -27,6 +28,7 @@ public class Order implements Entity,IdSearchable,SupIdSearchable
 		time= null;
 		totalPrice=0;
 		productsList= null;
+		area=null;
 	}
 
 	
@@ -61,7 +63,12 @@ public class Order implements Entity,IdSearchable,SupIdSearchable
 	public List<ProductQun> getProductsList() {
 		return productsList;
 	}
-
+	
+	public String getArea()
+	{
+		return area;
+	}
+	
 	public int getOrderID()
 	{
 		return orderID;
@@ -128,7 +135,11 @@ public class Order implements Entity,IdSearchable,SupIdSearchable
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
+	
+	public void setArea(String area) {
+		this.area = area;
+	}
+	
 	public void setTime(Time time) {
 		this.time = time;
 	}

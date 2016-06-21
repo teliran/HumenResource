@@ -15,11 +15,13 @@ public class Product implements AgreementEntity
 	private double price;
 	private List<Discount> discount;
 	private String manuNum;
+	private double weight;
+	
 	/////////////////
 	///Constructor///
 	/////////////////
 	
-	public Product(String name,String manuNum, String CatNum, String manID, String area, double price, List<Discount> discount)
+	public Product(String name,String manuNum, String CatNum, String manID, String area, double price, List<Discount> discount, double weight)
 	{
 		this.name= name;
 		this.CatNum= CatNum;
@@ -28,6 +30,7 @@ public class Product implements AgreementEntity
 		this.price= price;
 		this.discount= discount;
 		this.manuNum= manuNum;
+		this.weight=weight;
 	}
 	
 	public Product(){
@@ -38,6 +41,7 @@ public class Product implements AgreementEntity
 		area=null;
 		price= 0;
 		discount= null;
+		weight=0;
 	}
 	
 	public Product(Product other){
@@ -48,6 +52,7 @@ public class Product implements AgreementEntity
 		area= other.area;
 		price= other.price;
 		discount=other.discount;
+		this.weight=other.weight;
 	}
 	
 	/////////////
@@ -93,6 +98,11 @@ public class Product implements AgreementEntity
 		return discount;
 	}
 
+	public double getWeight()
+	{
+		return weight;
+	}
+
 	
 
 	///////////////////
@@ -123,6 +133,7 @@ public class Product implements AgreementEntity
 	/////////////
 	///Setters///
 	/////////////
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -139,6 +150,10 @@ public class Product implements AgreementEntity
 
 	public void setArea(String area) {
 		this.area = area;
+	}
+	
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 
 	

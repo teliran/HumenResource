@@ -44,7 +44,6 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 				ans= ((Order)order).getOrderID();
 			}
 		}
-		
 		return ans;
 	}
 
@@ -100,49 +99,55 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 		return orderNum;
 	}
 	
-	protected void takeOrder(List<String> manID, List<String> productManID, List<Double> quntity) throws AccessDeniedException
+	protected void takeOrder(List<String> manID, List<String> productManID, List<Double> quntity, String area) throws AccessDeniedException
 	{
 		for(int i=0;i<manID.size();i++)
 		{
-			autoOrder(manID.get(i),productManID.get(i),quntity.get(i));
+			autoOrder(manID.get(i),productManID.get(i),quntity.get(i),area);
 		}
 	}
 	
-	protected void autoOrder(String manId,String proManId, double qun) throws AccessDeniedException{
+	protected void autoOrder(String manId,String proManId, double qun, String area) throws AccessDeniedException
+	{
 		Agr_BL agrBL= new Agr_BL(dal);
-		String supNum= agrBL.lowestPrice(manId, proManId, qun);
-		Agreement agr= (Agreement) dal.getLastAgreementBySupplier(supNum);
-		List <AgreementEntity> proList= dal.GetAllProductByAgreement(supNum, agr.getSignDate());
-		Product product= null;
-		for(AgreementEntity pro: proList){
-			if(((Product)pro).getManID().equals(manId)&&((Product)pro).getManuNum().equals(proManId))
-				product= (Product) pro;
-		}
-		ProductQun proQun= new ProductQun(product, qun);
-		int orderNum= validOrder(supNum);
-		if (orderNum>=0) // i had to an existing order, so the order already sent to transportation
-			dal.UpdateProductInOrder(orderNum, supNum, proQun, true);
-		else{
-
-			//gets current date
-			java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-			
-			//gets current time
-			java.sql.Time time = new java.sql.Time(Calendar.getInstance().getTime().getTime());
-			
-			//creating empty order
-			double price=0;
-			List<ProductQun> productsList= new LinkedList<ProductQun>();
-			int orderID=0;
-			orderID= dal.getMaxIdOrder()+1;
-			Order or= new Order(orderID, supNum, date, time, price, productsList);
-			dal.AddOrder(or);
-			dal.UpdateProductInOrder(orderID, supNum, proQun, true);
-			TransManager.giveNewOrder(or, ((Supplier)dal.SearchSupplierById(supNum)).getArea());  
+		String supNum= agrBL.lowestPrice(manId, proManId, qun,area);
+		if(supNum!=null)
+		{
+			Agreement agr= (Agreement) dal.getLastAgreementBySupplier(supNum);
+			List <AgreementEntity> proList= dal.GetAllProductByAgreement(supNum, agr.getSignDate());
+			Product product= null;
+			for(AgreementEntity pro: proList){
+				if(((Product)pro).getManID().equals(manId)&&((Product)pro).getManuNum().equals(proManId))
+					product= (Product) pro;
+			}
+			ProductQun proQun= new ProductQun(product, qun);
+			int orderNum= validOrder(supNum);
+			if (orderNum>=0) // i had to an existing order, so the order already sent to transportation
+				dal.UpdateProductInOrder(orderNum, supNum, proQun, true);
+			else{
+	
+				//gets current date
+				java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+				
+				//gets current time
+				java.sql.Time time = new java.sql.Time(Calendar.getInstance().getTime().getTime());
+				
+				//creating empty order
+				double price=0;
+				List<ProductQun> productsList= new LinkedList<ProductQun>();
+				int orderID=0;
+				orderID= dal.getMaxIdOrder()+1;
+				Order or= new Order(orderID, supNum, date, time, price, productsList);
+				or.setArea(area);
+				dal.AddOrder(or);
+				dal.UpdateProductInOrder(orderID, supNum, proQun, true);
+				TransManager.giveNewOrder(or, ((Supplier)dal.SearchSupplierById(supNum)).getArea());  
+			}
 		}
 	}
 
-	String printOrder(Order order) throws AccessDeniedException{
+	String printOrder(Order order) throws AccessDeniedException
+	{
 		Supplier_BL sup_bl= new Supplier_BL(dal);
 		String supNum= order.getSupNum();
 		int phoneNum= sup_bl.getContactNum(supNum);
@@ -178,6 +183,10 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 		
 		return ans;
 	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	
 	private List <Order> byPrice(List <Order> orderList,String price1,String price2) throws AccessDeniedException, ParseException
 	{

@@ -143,7 +143,7 @@ public interface IBL {
      * @return true if exist , else false
      * @throws AccessDeniedException 
      */
-    boolean IsProductExists(String productNum,String manuNum) throws AccessDeniedException;
+    boolean IsProductExists(String productNum,String manuNum,String area) throws AccessDeniedException;
     
     /**
      * make order by the chipest price 
@@ -152,7 +152,7 @@ public interface IBL {
      * @param quntity
      * @throws AccessDeniedException 
      */
-    void takeOrder(List<String> manID,List<String> productManID,List<Double> quntity) throws AccessDeniedException;
+    void takeOrder(List<String> manID,List<String> productManID,List<Double> quntity,String area) throws AccessDeniedException;
  ///////////////////////////////////////////////////////////////////////////////////
     /***
      * 

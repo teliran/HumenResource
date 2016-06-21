@@ -337,17 +337,17 @@ public class Entity_BL implements  IBL{
 
 
 	@Override
-	public boolean IsProductExists(String productNum, String manuNum) throws AccessDeniedException {
+	public boolean IsProductExists(String productNum, String manuNum,String area) throws AccessDeniedException {
 		Product_BL pro=new Product_BL(itsDAL);
-		return pro.IsProductExists(productNum, manuNum);
+		return pro.IsProductExists(productNum, manuNum,area);
 		
 	}
 
 
 	@Override
-	public void takeOrder(List<String> manID, List<String> productManID, List<Double> quntity) throws AccessDeniedException {
+	public void takeOrder(List<String> manID, List<String> productManID, List<Double> quntity, String area) throws AccessDeniedException {
 		Order_BL ord=new Order_BL(itsDAL);
-		ord.takeOrder(manID, productManID, quntity);
+		ord.takeOrder(manID, productManID, quntity,area);
 	}
 
 

@@ -29,7 +29,7 @@ public class Product_DAL {
 
 	protected String AddProductByAgreement(String supId, Date date, Product pro) throws AccessDeniedException
 	{//add to product manu also
-		AddManufacturerProduct(pro.getManuNum(), pro.getManID());
+		AddManufacturerProduct(pro.getManuNum(), pro.getManID(),pro.getWeight());
 		String query="insert into product_supply(supplier_id,manu_num,catalog_number,sign_date,name,department,price,manufacturer_id) values(?,?,?,?,?,?,?,?)";
 		PreparedStatement pst=null;	
 			try {
@@ -57,14 +57,15 @@ public class Product_DAL {
 			return null;
 	}
 	
-	private void AddManufacturerProduct(String proNum,String proManu) throws AccessDeniedException
+	private void AddManufacturerProduct(String proNum,String proManu,double weight) throws AccessDeniedException
 	{
-		String query="insert into product_manufacturer(Product_Num,Manufcturer_Num) values(?,?)";
+		String query="insert into product_manufacturer(Product_Num,Manufcturer_Num,Weight) values(?,?,?)";
 		PreparedStatement pst=null;
 		try {
 			pst=conn.prepareStatement(query);
 			pst.setString(1, proNum);
 			pst.setString(2, proManu);
+			pst.setDouble(3, weight);
 			}
 		catch (SQLException e) 
 		{
@@ -162,7 +163,7 @@ public class Product_DAL {
 				throw new AccessDeniedException("Error: to find the recent date to acheive products from agreement");
 			}
 		}
-		query="SELECT * FROM product_supply WHERE supplier_id=? AND sign_date=? ";
+		query="SELECT DISTINCT name,manu_num,catalog_number,manufacturer_id,department,price,weight,sign_date,supplier_id FROM product_supply join product_manufacturer WHERE supplier_id=? AND sign_date=? ";
 		pst=null;
 		List<AgreementEntity> productList=new LinkedList<AgreementEntity>();
 		try {
@@ -171,7 +172,7 @@ public class Product_DAL {
 			pst.setDate(2, signDate);
 			rs=pst.executeQuery();
 			while(rs.next())
-				productList.add(new Product(rs.getString(5),rs.getString(2),rs.getString(3),getSupplierManId(rs.getString(2)),rs.getString(6),rs.getDouble(7),getDiscountOfProduct(rs.getString(1),rs.getDate(4),rs.getString(3))));
+				productList.add(new Product(rs.getString(1), rs.getString(2), rs.getString(3), getSupplierManId(rs.getString(2)), rs.getString(5), rs.getDouble(6) ,getDiscountOfProduct(rs.getString(9),rs.getDate(8),rs.getString(3)),rs.getDouble(7)));
 			}catch (SQLException e) 
 			{
 				throw new AccessDeniedException("Error: to add new Delivery day.");
@@ -257,7 +258,7 @@ public class Product_DAL {
 	protected Product getProduct(String supId,String catNum,Date signDate) throws AccessDeniedException
 	{
 		Product pro=null;
-		String query="SELECT * FROM product_supply WHERE supplier_id = ? AND catalog_number = ? AND sign_date = ? ";
+		String query="SELECT DISTINCT name,manu_num,catalog_number,manufacturer_id,department,price,weight,sign_date FROM product_supply join product_manufacturer WHERE supplier_id = ? AND catalog_number = ? AND sign_date = ? ";
 		PreparedStatement pst=null;
 		try {
 			pst=conn.prepareStatement(query);
@@ -266,10 +267,10 @@ public class Product_DAL {
 			pst.setDate(3, signDate);
 			ResultSet rs=pst.executeQuery();
 			if(rs.next())
-				pro=new Product(rs.getString(5), rs.getString(2), rs.getString(3), getSupplierManId(rs.getString(2)), rs.getString(6), rs.getDouble(7) , getDiscountOfProduct(supId,signDate,catNum));
+				pro=new Product(rs.getString(1), rs.getString(2), rs.getString(3), getSupplierManId(rs.getString(2)), rs.getString(5), rs.getDouble(6) , getDiscountOfProduct(supId,signDate,catNum),rs.getDouble(7));
 			pst.close();
 			rs.close();
 			return pro;
-		}catch(SQLException e){	throw new AccessDeniedException("Error: to get product.");}
+		}catch(SQLException e){throw new AccessDeniedException("Error: to get product.");}
 	}
 }

@@ -18,7 +18,7 @@ public class Agr_BL {
 			this.dal=dal;
 		}
 	
-	protected List <Agreement> getAllValidAgreement() throws AccessDeniedException{
+	protected List <Agreement> getAllValidAgreement(String area) throws AccessDeniedException{
 		List <Entity> list= dal.GetAllAgreement();
 		List<Agreement> ans= new LinkedList<Agreement>();
 		for(Entity ent: list){
@@ -29,6 +29,7 @@ public class Agr_BL {
 		List<Agreement> ans2= new LinkedList<Agreement>();
 		for(Entity ent: list){
 			String supNum= ((Supplier)ent).getSupNum();
+			String supArea=((Supplier)ent).getArea();
 			Date max= new Date(1900,1,1);
 			for(Agreement agr: ans){
 				if(agr.getSupNum().equals(supNum))
@@ -36,43 +37,42 @@ public class Agr_BL {
 					max=agr.getSignDate();
 			}
 			for(Agreement agr: ans){
-				if(agr.getSupNum().equals(supNum)&&agr.getSignDate().equals(max))
+				if(agr.getSupNum().equals(supNum)&&agr.getSignDate().equals(max) && supArea.equals(area))
 						ans2.add(agr);
 			}
 		}
-				
-				
 		return ans2;		
-		
-		
 	}
 	
 	
 	//returns supplier number
-	protected String lowestPrice(String manId,String manNum, double qun ) throws AccessDeniedException{
-		List <Agreement> agrList= getAllValidAgreement();
-		String supNum= null;
-		double price= Double.MAX_VALUE;
-		for (Agreement agr: agrList){
-			List<Product> proList= agr.getProductList();
-			for(Product pro: proList){
-				if(pro.getManID().equals(manId)&&pro.getManuNum().equals(manNum)){
-					double proPrice=pro.getPrice()*qun;
-					List<Discount> disList=pro.getDisList();
-					for(Discount dis: disList){
-						double temp= (dis.getDisc()*qun*pro.getPrice())/100;
-						if(qun>=dis.getQun()&&proPrice>temp)
-							proPrice=temp;
-					}
-					if (proPrice<price){
-						price= proPrice;
-						supNum= agr.getSupNum();
+	protected String lowestPrice(String manId,String manNum, double qun,String area) throws AccessDeniedException{
+		List <Agreement> agrList= getAllValidAgreement(area);
+		if(agrList!=null)
+		{
+			String supNum= null;
+			double price= Double.MAX_VALUE;
+			for (Agreement agr: agrList){
+				List<Product> proList= agr.getProductList();
+				for(Product pro: proList){
+					if(pro.getManID().equals(manId)&&pro.getManuNum().equals(manNum)){
+						double proPrice=pro.getPrice()*qun;
+						List<Discount> disList=pro.getDisList();
+						for(Discount dis: disList){
+							double temp= (dis.getDisc()*qun*pro.getPrice())/100;
+							if(qun>=dis.getQun()&&proPrice>temp)
+								proPrice=temp;
+						}
+						if (proPrice<price){
+							price= proPrice;
+							supNum= agr.getSupNum();
+						}
 					}
 				}
 			}
+			return supNum;
 		}
-		return supNum;
-		
+		return null;
 	}
 	
 	

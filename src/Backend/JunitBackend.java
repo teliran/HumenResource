@@ -31,7 +31,7 @@ public class JunitBackend {
 		Discount dis=new Discount(0, 0);
 		List<Discount> a=new LinkedList<Discount>();
 		a.add(dis);
-		Product pro=new Product("test","test", "test", "test", "test", 0, a);
+		Product pro=new Product("test","test", "test", "test", "test", 0, a,0);
 		Product copyProduct=new Product(pro);
 		assertEquals(pro.getArea(),copyProduct.getArea());
 		assertEquals(pro.getCatNum(),copyProduct.getCatNum());
@@ -55,7 +55,7 @@ public class JunitBackend {
 		List<Discount> discountList=new LinkedList<Discount>();
 		Discount dis=new Discount(10, 50);
 		discountList.add(dis);
-		Product pro=new Product("test", "test","test", "test", "test", 100, discountList);
+		Product pro=new Product("test", "test","test", "test", "test", 100, discountList,0);
 		List<ProductQun> productList=new LinkedList<ProductQun>();
 		ProductQun proQ=new ProductQun(pro, 50);
 		productList.add(proQ);

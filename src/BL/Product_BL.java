@@ -49,17 +49,20 @@ public class Product_BL {
 		return proByNameList;
 	}
 	
-	protected boolean IsProductExists(String manuNum,String productNum) throws AccessDeniedException
+	protected boolean IsProductExists(String manuNum,String productNum,String area) throws AccessDeniedException
 	{
 		Agr_BL agr=new Agr_BL(dal);
-		List<Agreement> agreementList=agr.getAllValidAgreement();
-		for(Agreement agreement: agreementList)
+		List<Agreement> agreementList=agr.getAllValidAgreement(area);
+		if(agreementList!=null)
 		{
-			List<Product> productList=agreement.getProductList();
-			for(Product product:productList)
+			for(Agreement agreement: agreementList)
 			{
-				if(product.getManID().equals(manuNum) && product.getManuNum().equals(productNum))
-					return true;
+				List<Product> productList=agreement.getProductList();
+				for(Product product:productList)
+				{
+					if(product.getManID().equals(manuNum) && product.getManuNum().equals(productNum))
+						return true;
+				}
 			}
 		}
 		return false;
