@@ -340,6 +340,7 @@ public class Entity_BL implements  IBL{
 	public boolean IsProductExists(String productNum, String manuNum,String area) throws AccessDeniedException {
 		Product_BL pro=new Product_BL(itsDAL);
 		return pro.IsProductExists(productNum, manuNum,area);
+	
 	}
 
 
