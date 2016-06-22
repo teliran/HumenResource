@@ -101,6 +101,7 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 	
 	protected void takeOrder(List<String> manID, List<String> productManID, List<Double> quntity, String area) throws AccessDeniedException
 	{
+		area=area.toLowerCase();
 		for(int i=0;i<manID.size();i++)
 		{
 			autoOrder(manID.get(i),productManID.get(i),quntity.get(i),area);
@@ -136,6 +137,7 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 				double price=0;
 				List<ProductQun> productsList= new LinkedList<ProductQun>();
 				int orderID=0;
+				productsList.add(proQun);
 				orderID= dal.getMaxIdOrder()+1;
 				Order or= new Order(orderID, supNum, date, time, price, productsList);
 				or.setArea(area);
@@ -324,5 +326,18 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 			
 		}
 	}
+	public Date getDateBYOrderId(int id)
+	{
+		try {
+			List <Order> orderList=ConvertEntityListToOrder(dal.GetAllOrder());
+			for(Order ord: orderList)
+				if(ord.getOrderID()==id)
+					return ord.getDate();
+			return null;
+		} catch (AccessDeniedException | ParseException e) {
+			System.out.println("there was problem to get all order in getDateBYOrderId func");
+			return null;
 	
+		}
+	}
 }

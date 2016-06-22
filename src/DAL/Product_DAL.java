@@ -171,9 +171,11 @@ public class Product_DAL {
 			pst.setString(1, id);
 			pst.setDate(2, signDate);
 			rs=pst.executeQuery();
-			while(rs.next())
-				productList.add(new Product(rs.getString(1), rs.getString(2), rs.getString(3), getSupplierManId(rs.getString(2)), rs.getString(5), rs.getDouble(6) ,getDiscountOfProduct(rs.getString(9),rs.getDate(8),rs.getString(3)),rs.getDouble(7)));
-			}catch (SQLException e) 
+			while(rs.next()){
+				System.out.println(rs.getString(2)); // 77 
+			System.out.println(rs.getString(4)); // 98
+				productList.add(new Product(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6) ,getDiscountOfProduct(rs.getString(9),rs.getDate(8),rs.getString(3)),rs.getDouble(7)));
+			}}catch (SQLException e) 
 			{
 				throw new AccessDeniedException("Error: to add new Delivery day.");
 			}
@@ -267,7 +269,7 @@ public class Product_DAL {
 			pst.setDate(3, signDate);
 			ResultSet rs=pst.executeQuery();
 			if(rs.next())
-				pro=new Product(rs.getString(1), rs.getString(2), rs.getString(3), getSupplierManId(rs.getString(2)), rs.getString(5), rs.getDouble(6) , getDiscountOfProduct(supId,signDate,catNum),rs.getDouble(7));
+				pro=new Product(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6) , getDiscountOfProduct(supId,signDate,catNum),rs.getDouble(7));
 			pst.close();
 			rs.close();
 			return pro;

@@ -364,5 +364,11 @@ public class Entity_BL implements  IBL{
 		itsDAL.EditOrder(order.getOrderID(), order);
 	}
 
+
+	@Override
+	public java.util.Date getDateByOrderId(int id) {
+		Order_BL ord=new Order_BL(itsDAL);
+		return ord.getDateBYOrderId(id);
+	}
 	
 }

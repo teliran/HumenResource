@@ -30,6 +30,8 @@ public class Agr_BL {
 		for(Entity ent: list){
 			String supNum= ((Supplier)ent).getSupNum();
 			String supArea=((Supplier)ent).getArea();
+			area=area.toLowerCase();
+			supArea=supArea.toLowerCase();
 			Date max= new Date(1900,1,1);
 			for(Agreement agr: ans){
 				if(agr.getSupNum().equals(supNum))

@@ -191,4 +191,6 @@ public interface IBL {
       int CloseConnection();
       
       void editOrder(Order order) throws AccessDeniedException;
+      
+      java.util.Date getDateByOrderId(int id);
 }

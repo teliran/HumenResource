@@ -12,6 +12,9 @@ public final class DB
 		db=null;
 	}
 	
+	public static Connection getcon(){
+		return connection;}
+	
 	public static ResultSet executeQuery(String query){
 		try {
 			return db.executeQuery(query);

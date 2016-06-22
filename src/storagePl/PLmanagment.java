@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import GUI.check;
-import storageBl.IBL;
+import storageBl.IBLs;
 import storageBackend.Department;
 import storageBackend.Product;
 import storageBackend.Stock;
 
 
 public class PLmanagment {
-	private IBL bl;
+	private IBLs bl;
 	
-	public PLmanagment(IBL bl){
+	public PLmanagment(IBLs bl){
 		this.bl=bl;
 	}
 	
@@ -186,7 +186,7 @@ public class PLmanagment {
 		System.out.println("enter expiried day by format: yyyy-MM-dd");
 		String expiered_day = check.chek_date("invalid input");
 		
-		bl.addStock(prod_id, supplier, amount, expiered_day,false);
+		bl.makeAnOrder(prod_id, supplier, amount, expiered_day,false);
 		}
 		
 	
@@ -274,13 +274,18 @@ public class PLmanagment {
 		
 	}
 	
-	public void printOptions(){
+	public void printOptions(boolean man){
+		if(!man){
 		System.out.println("for exit press 1");
 		
 		System.out.println("for storage manue press 2");
 		System.out.println("for product manue press 3");
 		System.out.println("for department menue press 4");
-		System.out.println("for report menue press 5");
+		System.out.println("for report menue press 5");}
+		else{
+			System.out.println("for exit press 1");
+			System.out.println("for report menue press 2");
+		}
 	}
 	
 	private void take(){
@@ -294,8 +299,8 @@ public class PLmanagment {
 		
 	}
 	
-	public boolean getChoise(){
-	    
+	public boolean getChoise(boolean man){
+	    if(!man){
 		int choise = check.checkInt(1, 5, "input not valid");
 		switch(choise)
 		{
@@ -319,7 +324,25 @@ public class PLmanagment {
 
 			return false;
 		}
-		}
+		}}
+	    else
+	    {
+	    			int choise = check.checkInt(1, 5, "input not valid");
+	    			switch(choise)
+	    			{
+	    			case 1:
+	    				bl.orderMinimumProduct();
+	    				return false;
+	    			
+	    			case 2:
+	    				ReportMenue();
+	    				break;
+	    			default:{
+
+	    				return false;
+	    			}
+	    			}
+	    }
 		return true;
 		
 	}
@@ -479,7 +502,7 @@ public class PLmanagment {
 		System.out.println("enter product manufacture id");
 		manufactureID =""+check.checkInt(1, Integer.MAX_VALUE, "input not valid");
 		System.out.println("enter product manufacture product id");
-		manufactureProdID =""+check.checkInt(1, Integer.MAX_VALUE, "input not valid");
+		manufactureProdID =reader.nextLine();//""+check.checkInt(1, Integer.MAX_VALUE, "input not valid");
 		System.out.println("first departments:");
 		ArrayList<Department> ld = bl.findDepartmentsByGeneralDepartmentID(0);
 		System.out.println("enter first department number");

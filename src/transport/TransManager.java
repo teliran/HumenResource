@@ -13,6 +13,9 @@ import BL.Entity_BL;
 import BL.IBL;
 import BL.Order_BL;
 import Backend.Order;
+import DAL.AccessDeniedException;
+import DAL.Entity_Dal;
+import DAL.IDAL;
 import DB.DB;
 import Emp.Employee;
 import Emp.Employee.Position;
@@ -106,7 +109,7 @@ public class TransManager {
 	}
 	
 	public static String  giveOrderDoc(int transId){
-		if (!hasOrder){
+		if (ordVecN.isEmpty()&ordVecS.isEmpty()){
 			return null;
 		}
 		Order ord = ordVecN.remove(0);
@@ -248,13 +251,22 @@ public class TransManager {
 				}
 			}
 		}
+
+
 	private static void checkTransDaly() {
 		Transport[] temp= Transport.searchTrans("pending","Status");
 		for(int i=0;i<temp.length;i++)
 		{
 			int dec = Integer.parseInt(temp[0].getDeocNum());
 			long DAY_IN_MS = 1000 * 60 * 60 * 24;
-			IBL a = new Entity_BL(null);
+			IDAL dd = null;
+			try {
+				dd = new Entity_Dal(DB.getcon());
+			} catch (AccessDeniedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			IBL a = new Entity_BL(dd);
 			if(a.getDateByOrderId(dec).before(new Date(System.currentTimeMillis() - (7 * DAY_IN_MS))))
 			{
 				Employee.requestEmployee(Store.currentDate,Position.driver,2);

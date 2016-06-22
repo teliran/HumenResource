@@ -52,9 +52,9 @@ public class Store {
 
 	public void showMenu(){	
 		int userInput;
-		System.out.println("Welcome to "+name+"!");
-		login();
+		System.out.println("Welcome to "+name+"!");	
 		while (true){
+			login();
 			int index =0;
 			System.out.println("Main Menu :");
 			if(user.equals(Position.hrManager) || user.equals(Position.storeManager)){
@@ -115,17 +115,19 @@ public class Store {
 				break;
 			case 7: //EXIT
 				//init.close();
-				return;			
+							
 			}
 		}	
 	}
 	
 	public void login(){
-		Position[] pos = {Position.hrManager,Position.storeKeeper,Position.storeManager,Position.logisticManager};
+		
+		Position[] pos = {Position.hrManager,Position.storeKeeper,Position.storeManager,Position.logisticManager,};
 		System.out.println("Please Select Your Position:");
 		int ans = selectFromMenu(pos);
 		user = pos[ans];
 		System.out.println("Login successfully!");
+		
 	}
 	
 	public static int getNumber(){

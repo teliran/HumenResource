@@ -6,7 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import storageBl.Entity_BL;
+import GUI.check;
+import storageBl.Entity_BLs;
 import storageDal.Entity_DAL;
 import storageDal.SQLiteJDBC;
 
@@ -37,7 +38,7 @@ public class manageMain {
 	}*/
 	public void run() {
 		Entity_DAL dal = new Entity_DAL(conn);
-		Entity_BL bl = new Entity_BL(dal,b);
+		Entity_BLs bl = new Entity_BLs(dal,b);
 		PLmanagment m = new PLmanagment(bl);
 		/*System.out.println(add_n_days("2016-12-3", 31));
 		if (add_n_days("2016-12-3", 31).equals("2017-01-03")){
@@ -46,15 +47,28 @@ public class manageMain {
 		//SQLiteJDBC.CreateDepartmentTable();
 		//SQLiteJDBC.CreateProductTable();
 		
-		
+		System.out.println("for manager login press 1");
+		System.out.println("for storage worker login press 2");
+		System.out.println("for exit press 3");
+		int choise = check.checkInt(1, 3, "input not valid");
+		boolean man = true;
+		if(choise == 3){
+			return;
+		}
+		if(choise == 2){
+			man = false;
+		}
+		if(choise == 1){
+			man = true;
+		}
 		//SQLiteJDBC.CreateStockTable();
 		//SQLiteJDBC.CreateReportSupply();
 		System.out.println("welcome, press youre choise");
 		boolean bol = true;
 		while(bol)
 		{
-			m.printOptions();
-			bol = m.getChoise();
+			m.printOptions(man);
+			bol = m.getChoise(man);
 		}
 	}
 

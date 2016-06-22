@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
+
+import Backend.Agreement;
 import Backend.Entity;
 import Backend.IdSearchable;
 import Backend.Order;
@@ -50,10 +52,11 @@ public class Order_DAL {
 			try {
 				pst.executeUpdate();
 				pst.close();
+				System.out.println("shit now "+order.getList().size());
 				for(int i=0;i<order.getList().size();i++)
 				{
 					ProductQun proquen=order.getList().get(i);
-					addProductToOrder(order.getOrderID(),order.getSupNum(),proquen.getPro().getCatNum(),proquen.getQun());
+					addProductToOrder(order.getOrderID(),order.getSupNum(),proquen.getPro().getCatNum(),proquen.getQun(),((Agreement)entity_dal.getLastAgreementBySupplier(order.getSupNum())).getSignDate()  );
 				}
 				return null;	
 				}
@@ -63,16 +66,17 @@ public class Order_DAL {
 			}
 	}
 
-	private void addProductToOrder(int orderId, String supId, String catNum, double quantity) throws AccessDeniedException
+	private void addProductToOrder(int orderId, String supId, String catNum, double quantity, Date date) throws AccessDeniedException
 	{
-		String query="insert into order_product_supply values(?,?,?,?)";
+		String query="insert into order_product_supply values(?,?,?,?,?)";
 		PreparedStatement pst=null;
 		try {
 			pst=conn.prepareStatement(query);
 			pst.setInt(1, orderId);
 			pst.setString(2,supId);
 			pst.setString(3,catNum);
-			pst.setDouble(4,quantity);
+			pst.setDate(4, date);
+			pst.setDouble(5,quantity);
 			pst.execute();
 			pst.close();
 			}
@@ -171,6 +175,7 @@ public class Order_DAL {
 			}
 		
 	}
+	
 	protected boolean UpdateProductInOrder(int orderNum, String supId, ProductQun proQun , boolean toDo) throws AccessDeniedException
 	{
 		String query="SELECT Max(sign_date) FROM agreement WHERE supplier_id=?";

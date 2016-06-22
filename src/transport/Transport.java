@@ -7,10 +7,18 @@ import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Vector;
-
+import BL.Entity_BL;
+import BL.IBL;
+import BL.Order_BL;
 import Backend.Order;
+import DAL.AccessDeniedException;
+import DAL.Entity_Dal;
+import DAL.IDAL;
 import DB.DB;
 import Emp.Employee.Position;
+import storageBl.IBLs;
+import storageBl.Entity_BLs;
+import storageDal.Entity_DAL;
 import store.Store;
 
 public class Transport {
@@ -181,6 +189,22 @@ public class Transport {
 		setStatus("done", tempt[select].getID());
 		freeDriver(tempt[select].getDriverID());
 		freeTruck(tempt[select].getTrackId());
+		IDAL dd = null;
+		Order ord=null;
+		try {
+			dd = new Entity_Dal(DB.getcon());
+		} catch (AccessDeniedException e) {
+			e.printStackTrace();
+		}
+		IBL a = new Entity_BL(dd);
+		try {
+			ord = (Order) a.SearchByID(tempt[select].deocNum, new Order());
+		} catch (NumberFormatException | AccessDeniedException | ParseException e) {
+			e.printStackTrace();
+		}
+		Entity_DAL dal = new Entity_DAL(DB.getcon());
+		IBLs bl = new Entity_BLs(dal,a);
+		bl.UpdateStoreSupply(ord);
 //-----------------------------------------------------------------------------------
 //------------------------------17.06.16---------------------------------------------
 //When a transport has arrived it brings back a list of products inside the object or

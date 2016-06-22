@@ -176,11 +176,11 @@ private BL.IBL b;
 	}
 	private String randomDate(){
 		Random rand = new Random();
-
-		int  day = rand.nextInt(31) + 1;
 		int  month = rand.nextInt(12) + 1;
-		int  year = rand.nextInt(2016) + 2026;
-		return ""+day+""+month+""+year;
+		int  day = rand.nextInt(28) + 1;
+		
+		int  year = rand.nextInt(100) + 2016;
+		return ""+year+"-"+month+"-"+day;
 	}
 	public void UpdateStoreSupply(Order order){
 		IBL bl_bl;
@@ -252,10 +252,11 @@ private BL.IBL b;
 		for(Product p :lp){
 			if(!p.getIsRemove()){
 				if(p.getMinimum_amount()>p.getTotal_amount() - p.getTotal_damaged() - itsDAL.findNumOfExpiredProduct(p.getProd_id())){
-						
 					try {
 						boolean bo = bl_bl.IsProductExists( p.getManufactureID(), p.getManufactureProdID(),erea);
 						if(bo){
+
+							
 							manID.add(p.getManufactureID());						
 							productManID.add(p.getManufactureProdID());
 							Double d = new Double((double)(p.getMinimum_amount()-(p.getTotal_amount() - p.getTotal_damaged() - itsDAL.findNumOfExpiredProduct(p.getProd_id()))));
