@@ -43,7 +43,7 @@ public class OrderDocument {
 	}*/
 	public void addDoc(int transId){
 		for (ProductQun p: _productsList){
-			String query ="INSERT INTO Doc_History (DocID, TransID, ProductID, ManufID ,Amount, SupplierId, Dest) " +
+			String query ="INSERT INTO Doc_History (DocID, TransID, Product, ManufID ,Amount, SupplierId, Dest) " +
                 "VALUES ("+_docId+", "+transId+", '"+p.getPro().getCatNum()+
                 "', '"+p.getPro().getManID()+"', "+(int)(p.getQun())+", '"+_source+"' , '"+_dest+"');";
 			DB.executeUpdate(query);

@@ -222,6 +222,7 @@ public class Order_DAL {
 				}
 			catch (SQLException e) 
 			{
+				System.out.println(e);
 				throw new AccessDeniedException("Error: to add or replace product to order.");
 			}
 		}
@@ -296,7 +297,7 @@ public class Order_DAL {
 
 	protected List<Entity> GetAllOrder() throws AccessDeniedException, ParseException
 	{
-		String query="SELECT * FROM orders ";
+		String query="SELECT * FROM orders";
 		PreparedStatement pst;
 		List<Entity> orderList=new LinkedList<Entity>();
 		try {
@@ -309,6 +310,7 @@ public class Order_DAL {
 			}
 			return orderList;
 		} catch (SQLException e) {
+			System.out.println(e);
 			throw new AccessDeniedException("Error: get all orders.");
 		}
 	}

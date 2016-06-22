@@ -19,6 +19,7 @@ import DAL.IDAL;
 import DB.DB;
 import Emp.Employee;
 import Emp.Employee.Position;
+import Init.Init;
 import store.Store;
 /**
  * 
@@ -261,12 +262,14 @@ public class TransManager {
 			long DAY_IN_MS = 1000 * 60 * 60 * 24;
 			IDAL dd = null;
 			try {
-				dd = new Entity_Dal(DB.getcon());
+				dd = new Entity_Dal(Init.getCon());
 			} catch (AccessDeniedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			IBL a = new Entity_BL(dd);
+			if(a.getDateByOrderId(dec) == null)
+				return;
 			if(a.getDateByOrderId(dec).before(new Date(System.currentTimeMillis() - (7 * DAY_IN_MS))))
 			{
 				Employee.requestEmployee(Store.currentDate,Position.driver,2);

@@ -12,7 +12,7 @@ import storagePl.manageMain;
 
 public class Init
 {
-	private Connection conn;
+	private static Connection conn;
 	private IDAL adal;
 	private IBL abl;
 	private openScreen pl;
@@ -38,6 +38,10 @@ public class Init
 		 	  System.out.println("Error: connect to server failed");
 		 	  System.exit(0);
 		   } 
+	}
+	
+	public static Connection getCon(){
+		return conn;
 	}
 	
 	public openScreen getSupplierPl()

@@ -16,6 +16,7 @@ import DAL.Entity_Dal;
 import DAL.IDAL;
 import DB.DB;
 import Emp.Employee.Position;
+import Init.Init;
 import storageBl.IBLs;
 import storageBl.Entity_BLs;
 import storageDal.Entity_DAL;
@@ -52,7 +53,7 @@ public class Transport {
 		if (insert){
 			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum,Status,weight) " +
 	                "VALUES ("+ID+", "+driverID+", "+trackId+", '"+desAddress+"' ,'"+fromAddress+"' ,'"+date.getDate()+"/"+date.getMonth()+"/"+(date.getYear()+1900)+"' ,'"+time.getHours()+":"+time.getMinutes()+
-	                "' ,"+contactPhone+" ,'"+contactName+"', "+deocNum+", '"+weight+", '"+status+"');";
+	                "' ,"+contactPhone+" ,'"+contactName+"', "+deocNum+", '"+status+"', "+(int)weight+");";
 		DB.executeUpdate(query);
 		}
 	}
@@ -192,7 +193,7 @@ public class Transport {
 		IDAL dd = null;
 		Order ord=null;
 		try {
-			dd = new Entity_Dal(DB.getcon());
+			dd = new Entity_Dal(Init.getCon());
 		} catch (AccessDeniedException e) {
 			e.printStackTrace();
 		}
@@ -202,7 +203,7 @@ public class Transport {
 		} catch (NumberFormatException | AccessDeniedException | ParseException e) {
 			e.printStackTrace();
 		}
-		Entity_DAL dal = new Entity_DAL(DB.getcon());
+		Entity_DAL dal = new Entity_DAL(Init.getCon());
 		IBLs bl = new Entity_BLs(dal,a);
 		bl.UpdateStoreSupply(ord);
 //-----------------------------------------------------------------------------------

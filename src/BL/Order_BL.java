@@ -334,7 +334,8 @@ protected List <Order> ConvertEntityListToOrder(List<Entity> orderList)
 				if(ord.getOrderID()==id)
 					return ord.getDate();
 			return null;
-		} catch (AccessDeniedException | ParseException e) {
+		} catch (Exception e) {
+			System.out.println(e);
 			System.out.println("there was problem to get all order in getDateBYOrderId func");
 			return null;
 	
