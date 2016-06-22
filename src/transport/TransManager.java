@@ -25,7 +25,8 @@ public class TransManager {
 	private static int _area;
 	//private static Order _ord = null;
 	private static HashMap<Integer, Order> tranOrdersMap = new HashMap<>();// maps a transportID to the Order
-	private static Vector<Order> ordVec = new Vector<>(); //saves given orders when program is active
+	private static Vector<Order> ordVecN = new Vector<>(); //saves given orders when program is active
+	private static Vector<Order> ordVecS = new Vector<>();
 	private static boolean hasOrder;
 	public static int getLastId(String id, String table){
 		int ret = -1;
@@ -86,17 +87,13 @@ public class TransManager {
 	}
 	public static void giveNewOrder(Order or, String area) {
 		if (area.equals("North")|| area.equals("north")){
-			_area = 0;
-			//_ord = new Order(or);
 			Order ord = new Order(or);
-			ordVec.addElement(ord);
+			ordVecN.addElement(ord);
 			hasOrder = true;
 		}
 		else if (area.equals("South")|| area.equals("south")){
-			_area = 1;
-			//_ord = new Order(or);
 			Order ord = new Order(or);
-			ordVec.addElement(ord);
+			ordVecS.addElement(ord);
 			hasOrder = true;
 		}
 		else System.out.println("Areas are: North or South, order did not received!");
@@ -106,10 +103,20 @@ public class TransManager {
 		if (!hasOrder){
 			return null;
 		}
-		Order ord = ordVec.remove(0);
+		Order ord = ordVecN.remove(0);
 		tranOrdersMap.put(transId, ord);
 		String ret ="";
-		int zone = _area;
+		int zone=0;
+		if(!ordVecN.isEmpty())
+		{
+			zone=0;
+		}
+		if(!ordVecS.isEmpty())
+		{
+			zone=1;
+		}
+		if (zone!=-1)
+		{
 		String tempSource = ord.getSupNum();
 		int destNum = (int)(Math.random()*_destArr[zone].length)+1;
 		int[]memo = new int[_destArr[zone].length];
@@ -125,7 +132,8 @@ public class TransManager {
 				ret = ret+doc.get_docId()+"@"+tempSource+"@"+tempDest+"%";
 			}
 		}
-		if (ordVec.isEmpty())
+		}
+		if (ordVecN.isEmpty()&ordVecS.isEmpty())
 			hasOrder = false;
 		return ret;
 	}

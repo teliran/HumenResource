@@ -1,4 +1,5 @@
 package transport;
+import java.util.Calendar;
 import java.util.Date;
 import java.sql.ResultSet;
 import java.text.ParseException;
@@ -23,10 +24,13 @@ public class Transport {
 	private int contactPhone;
 	private String contactName;
 	private String deocNum;
+	private double weight;
 	private static Scanner scan;
-	private static final String on = "ONGOING", done = "DONE";
+	private String status;
 	public Transport(boolean insert,int ID, int driverID, int trackId, String desAddress, String fromAddress, 
 		        	Date date,Date time, int contactPhone, String contactName, String deocNum) {
+		this.weight=0;
+		status="pending";
 		this.ID=ID;
 		this.driverID = driverID;
 		this.truckID = trackId;
@@ -38,9 +42,9 @@ public class Transport {
 		this.contactName = contactName;
 		this.deocNum = deocNum;
 		if (insert){
-			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum,Status) " +
+			String query ="INSERT INTO Transport (ID,driverID,truckID,desAddress,fromAddress,depDate,depTime,contactPhone,contactName,deocNum,Status,weight) " +
 	                "VALUES ("+ID+", "+driverID+", "+trackId+", '"+desAddress+"' ,'"+fromAddress+"' ,'"+date.getDate()+"/"+date.getMonth()+"/"+(date.getYear()+1900)+"' ,'"+time.getHours()+":"+time.getMinutes()+
-	                "' ,"+contactPhone+" ,'"+contactName+"', "+deocNum+", '"+on+"');";
+	                "' ,"+contactPhone+" ,'"+contactName+"', "+deocNum+", '"+weight+", '"+status+"');";
 		DB.executeUpdate(query);
 		}
 	}
@@ -84,6 +88,12 @@ public class Transport {
 	public String getDeocNum() {
 		return deocNum;
 	}
+	public void setDate(Date date){
+		this.depDate=date;
+	}
+	public void setTime(Date time){
+		this.depTime=time;
+	}
 	public static void showTransMenu(){
 		int selection;
 		while(true){
@@ -93,9 +103,10 @@ public class Transport {
 			System.out.println("1)   Search Transport");
 			System.out.println("2)   Add New Transport");
 			System.out.println("3)   Edit Transport");
-			System.out.println("4)   End Transport");
-			System.out.println("5)   Show all");
-			System.out.println("6)   Return");
+			System.out.println("4)   Start Transport");
+			System.out.println("5)   End Transport");
+			System.out.println("6)   Show all");
+			System.out.println("7)   Return");
 			System.out.println("============================");
 			System.out.println("--------Transport Menu--------");
 			System.out.println("============================");
@@ -123,14 +134,36 @@ public class Transport {
 				else System.out.println("Update failed"); 
 				break;
 			case 4:
-				makeTransportArrival();
+				makeTransportOngoing();
 				break;
 			case 5:
-				prettyPrinting(getTransArray(DB.executeQuery("SELECT * FROM Transport")));
+				makeTransportArrival();
 				break;
 			case 6:
+				prettyPrinting(getTransArray(DB.executeQuery("SELECT * FROM Transport")));
+				break;
+			case 7:
 				return;
 			}
+		}
+	}
+	private static void makeTransportOngoing(){
+		System.out.println("Choose Transport to start");
+		Transport[] tempt = searchTrans("pending", "Status" );
+		if(tempt.length==0){
+			System.out.println("No truck in traffic");
+			return;
+		}
+		int select = TransManager.selectFromChoises(tempt);
+		if(setDriver(tempt[select].getDriverID()) & setTruck(tempt[select].getTrackId()))
+		{
+			setStatus("on", tempt[select].getID());
+			tempt[select].setDate(Store.currentDate);
+			tempt[select].setTime(Store.currentDate);
+		}
+		else 
+		{
+			System.out.println("Transport ongoing fail");
 		}
 	}
 	/**
@@ -139,13 +172,13 @@ public class Transport {
 	 */
 	private static void makeTransportArrival() {
 		System.out.println("Choose Transport that finished");
-		Transport[] tempt = searchTrans(on, "Status" );
+		Transport[] tempt = searchTrans("on", "Status" );
 		if(tempt.length==0){
 			System.out.println("No truck in traffic");
 			return;
 		}
 		int select = TransManager.selectFromChoises(tempt);
-		setStatus(done, tempt[select].getID());
+		setStatus("done", tempt[select].getID());
 		freeDriver(tempt[select].getDriverID());
 		freeTruck(tempt[select].getTrackId());
 //-----------------------------------------------------------------------------------
@@ -179,6 +212,36 @@ public class Transport {
 			return;
 		}
 		darr[0].set_available("YES");
+	}
+
+	private static boolean setTruck(int truckID2) {
+		Track[] tarr = Track.searchTruck("TruckID", ""+truckID2);
+		if (tarr.length==0){
+			System.out.println("There isn't a truck with that ID");
+			return false;
+		}
+		if (tarr[0].available)
+		{
+			System.out.println("This truck is occupation");
+			return false;			
+		}
+		tarr[0].setAvailabilty(false);
+		return true;
+	}
+	
+	private static boolean setDriver(int driverID2) {
+		Driver[] darr = Driver.searchDriver("ID", ""+driverID2);
+		if (darr.length==0){
+			System.out.println("There isn't such driver");
+			return false;
+		}
+		if (darr[0].get_available().equals("YES"))
+		{
+			System.out.println("This driver is occupation");
+			return false;			
+		}
+		darr[0].set_available("NO");
+		return true;
 	}
 	
 	private static void setStatus(String set, int transId) {
@@ -266,9 +329,18 @@ public class Transport {
 		}
 		tempTruck.setAvailabilty(false);
 		tempDriver.set_available("NO");
+		
 		return new Transport(true,ID,driverID,truckID,des,from,date ,time,contact,con,deco);
 	}
-	
+	public boolean updateWeight(double weight){
+		Track[] t =Track.searchTruck(this.truckID+"","TruckID");
+		if(this.weight+weight<t[0].getCarryingWeight())
+		{
+			this.weight=this.weight+weight;
+			return true;
+		}
+		return false;
+	}
 	public static Transport[] searchTrans(){
 		int choice=1;
 		String type="";
