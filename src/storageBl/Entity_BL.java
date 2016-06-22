@@ -2,6 +2,7 @@ package storageBl;
 
 import java.util.ArrayList;
 
+import Backend.Order;
 import storageDal.IDAL;
 import storageBackend.Department;
 import storageBackend.Product;
@@ -184,6 +185,13 @@ private BL.IBL b;
 		
 		stock_bl.demaged();
 	}
+	public void makeAnOrder(int prod_id, int supid, int amount,String exp_day,boolean remove) {
+		
+		stock_bl.makeAnOrder(prod_id, supid, amount, exp_day, remove);
+	}
+	public void UpdateStoreSupply(Order order){
+		stock_bl.UpdateStoreSupply(order);
+	}
 	public void addStock(int prod_id, int supid, int amount,String exp_day,boolean remove) {
 		
 		stock_bl.addStock(prod_id, supid, amount, exp_day, remove);
@@ -202,7 +210,7 @@ private BL.IBL b;
 		return itsDAL.CloseConnection();
 	}
 
-	
+
 	
 
 }

@@ -86,6 +86,9 @@ public class Entity_DAL implements IDAL{
 		
 		return linq_p.isProductExist(prodID, name);
 	}
+	public Product findProductByManufactureIDAndManufactureProdID(String manID, String manProdID){
+		return linq_p.findProductByManufactureIDAndManufactureProdID(manID, manProdID);
+	}
 	@Override
 	public Product findProductByID(int prodID) {
 		

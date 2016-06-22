@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import Backend.Order;
 import storageBackend.Department;
 import storageBackend.Product;
 import storageBackend.ReportSupply;
@@ -40,10 +41,11 @@ public interface IBL {
 		public ArrayList<Product> findProductsByOneDepartment(int department1);
 		public void UpdateNextDateOrderProduct(int prod_id, String nextDateOreder);
 	//Stack
-public void getExpiried();
+		public void getExpiried();
 		
 		public void getMinimum();
-		
+		public void makeAnOrder(int prod_id, int supid, int amount,String exp_day,boolean remove); 
+		public void UpdateStoreSupply(Order order);
 		
 		public ArrayList<Stock> spesifiedStok(int prodID) ;
 		public void getallstock();
@@ -55,8 +57,6 @@ public void getExpiried();
 		public void orderMinimumProduct();
 		
 		public int CloseConnection();
-		//////////////////////
 		
-
 	
 }

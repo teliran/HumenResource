@@ -76,6 +76,41 @@ public class linQProduct {
 	   
 	    return p;
 	}
+	public Product findProductByManufactureIDAndManufactureProdID(String manID, String manProdID){
+		
+		
+		   // Connection c = null;
+		    Statement stmt = null;
+		    Product p = null;
+		    try {
+		     /* Class.forName("org.sqlite.JDBC");
+		      c = DriverManager.getConnection("jdbc:sqlite:Assignment1.db");
+		      c.setAutoCommit(false);*/
+		    	
+		      stmt = conn.createStatement();
+		      ResultSet rs = stmt.executeQuery( "SELECT * FROM Product WHERE MANUFACTURE_ID = '"+manID+"' AND MANUFACTURE_PROD_ID = '"+manProdID+"';" );
+		     
+		      while ( rs.next() ) {
+		    	  if(rs.getString("IS_REMOVE").equals("true")){
+		    	  p = new Product(rs.getInt("ID"),rs.getString("NAME"),rs.getString("MANUFACTURE_ID"),rs.getString("MANUFACTURE_PROD_ID"),rs.getInt("FIRST_DEPARTMENT"),rs.getInt("SECOND_DEPARTMENT"),
+		    			  rs.getInt("THIRD_DEPARTMENT"),rs.getInt("MINIMUM_AMOUNT"),rs.getInt("TOTAL_AMOUNT"),rs.getInt("TOTAL_DAMAGED"),rs.getString("NEXT_DATE_ORDER"),rs.getInt("DAYS"),rs.getInt("QUNTITY"),true);
+		    	  }
+		    	  else{
+		    		  p = new Product(rs.getInt("ID"),rs.getString("NAME"),rs.getString("MANUFACTURE_ID"),rs.getString("MANUFACTURE_PROD_ID"),rs.getInt("FIRST_DEPARTMENT"),rs.getInt("SECOND_DEPARTMENT"),
+			    			  rs.getInt("THIRD_DEPARTMENT"),rs.getInt("MINIMUM_AMOUNT"),rs.getInt("TOTAL_AMOUNT"),rs.getInt("TOTAL_DAMAGED"),rs.getString("NEXT_DATE_ORDER"),rs.getInt("DAYS"),rs.getInt("QUNTITY"),false);
+		    	  }
+		        
+		      }
+		      rs.close();
+		      stmt.close();
+		      //c.close();
+		    } catch ( Exception e ) {
+		      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+		      System.exit(0);
+		    }
+		   
+		    return p;
+		}
 public Product findProductByName(String prodName){
 		
 		

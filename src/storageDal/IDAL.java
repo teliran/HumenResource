@@ -32,6 +32,7 @@ public interface IDAL {
 	public Product findProductByName(String prodName);
 	public void UpdateProduct(Product p);
 	public void UpdateTotalAmountProduct(int amount, int prod_id);
+	public Product findProductByManufactureIDAndManufactureProdID(String manID, String manProdID);
 	public void UpdateTotalDamagedProduct(int damaged, int prod_id);
 	public void DeleteProduct(int prod_id);
 	public void AddProd(Product p);

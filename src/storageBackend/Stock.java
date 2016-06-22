@@ -50,7 +50,7 @@ public class Stock {
 	public Stock(int index, int prod_id, int supplier, int amount, String expiered_day, boolean isRemove){
 		this.index = index;
 		this.prod_id = prod_id;
-		//this.supplier = supplier;
+		this.supplier = supplier;
 		this.amount = amount;
 		this.expiered_day = expiered_day;
 		this.isRemove = isRemove;
@@ -60,7 +60,7 @@ public class Stock {
 	public Stock(Stock other){
 		this.index = other.index;
 		this.prod_id = other.prod_id;
-		//this.supplier = other.supplier;
+		this.supplier = other.supplier;
 		this.amount = other.amount;
 		this.expiered_day = other.expiered_day;
 		this.isRemove = other.isRemove;
