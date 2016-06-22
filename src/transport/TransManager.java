@@ -9,8 +9,14 @@ import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.Vector;
 
+import BL.Entity_BL;
+import BL.IBL;
+import BL.Order_BL;
 import Backend.Order;
 import DB.DB;
+import Emp.Employee;
+import Emp.Employee.Position;
+import store.Store;
 /**
  * 
  * @author Hen&Avner
@@ -106,11 +112,12 @@ public class TransManager {
 		Order ord = ordVecN.remove(0);
 		tranOrdersMap.put(transId, ord);
 		String ret ="";
-		int zone=0;
+		int zone=-1;
 		if(!ordVecN.isEmpty())
 		{
 			zone=0;
 		}
+		else
 		if(!ordVecS.isEmpty())
 		{
 			zone=1;
@@ -203,6 +210,7 @@ public class TransManager {
 		
 	}
 	public static void showMainMenu() {
+		checkTransDaly();
 			int selection;
 			while(true){
 				System.out.println("============================");
@@ -240,6 +248,18 @@ public class TransManager {
 				}
 			}
 		}
-
-		
+	private static void checkTransDaly() {
+		Transport[] temp= Transport.searchTrans("pending","Status");
+		for(int i=0;i<temp.length;i++)
+		{
+			int dec = Integer.parseInt(temp[0].getDeocNum());
+			long DAY_IN_MS = 1000 * 60 * 60 * 24;
+			IBL a = new Entity_BL(null);
+			if(a.getDateByOrderId(dec).before(new Date(System.currentTimeMillis() - (7 * DAY_IN_MS))))
+			{
+				Employee.requestEmployee(Store.currentDate,Position.driver,2);
+			}
+				
+		}
+	}
 }
