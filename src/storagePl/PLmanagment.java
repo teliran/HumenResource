@@ -2,7 +2,7 @@ package storagePl;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import Emp.Employee.Position;
 import GUI.check;
 import storageBl.IBLs;
 import storageBackend.Department;
@@ -271,11 +271,10 @@ public class PLmanagment {
 		}
 		}
 		
-		
 	}
 	
-	public void printOptions(boolean man){
-		if(!man){
+	public void printOptions(){
+		if(!store.Store.user.equals(Position.storeManager)){
 		System.out.println("for exit press 1");
 		
 		System.out.println("for storage manue press 2");
@@ -299,8 +298,8 @@ public class PLmanagment {
 		
 	}
 	
-	public boolean getChoise(boolean man){
-	    if(!man){
+	public boolean getChoise(){
+		if(!store.Store.user.equals(Position.storeManager)){
 		int choise = check.checkInt(1, 5, "input not valid");
 		switch(choise)
 		{

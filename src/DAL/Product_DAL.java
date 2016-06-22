@@ -172,8 +172,7 @@ public class Product_DAL {
 			pst.setDate(2, signDate);
 			rs=pst.executeQuery();
 			while(rs.next()){
-				System.out.println(rs.getString(2)); // 77 
-			System.out.println(rs.getString(4)); // 98
+
 				productList.add(new Product(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getDouble(6) ,getDiscountOfProduct(rs.getString(9),rs.getDate(8),rs.getString(3)),rs.getDouble(7)));
 			}}catch (SQLException e) 
 			{

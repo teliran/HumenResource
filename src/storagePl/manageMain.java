@@ -47,28 +47,15 @@ public class manageMain {
 		//SQLiteJDBC.CreateDepartmentTable();
 		//SQLiteJDBC.CreateProductTable();
 		
-		System.out.println("for manager login press 1");
-		System.out.println("for storage worker login press 2");
-		System.out.println("for exit press 3");
-		int choise = check.checkInt(1, 3, "input not valid");
-		boolean man = true;
-		if(choise == 3){
-			return;
-		}
-		if(choise == 2){
-			man = false;
-		}
-		if(choise == 1){
-			man = true;
-		}
+
 		//SQLiteJDBC.CreateStockTable();
 		//SQLiteJDBC.CreateReportSupply();
 		System.out.println("welcome, press youre choise");
 		boolean bol = true;
 		while(bol)
 		{
-			m.printOptions(man);
-			bol = m.getChoise(man);
+			m.printOptions();
+			bol = m.getChoise();
 		}
 	}
 

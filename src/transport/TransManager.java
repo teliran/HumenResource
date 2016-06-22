@@ -140,7 +140,7 @@ public class TransManager {
 			if (ord!=null){
 				OrderDocument doc = new OrderDocument(ord, tempDest);
 				doc.addDoc(transId);
-				ret = ret+doc.get_docId()+"@"+tempSource+"@"+tempDest+"%";
+				ret = ret+ord.getOrderID()+"@"+tempSource+"@"+tempDest+"%";
 			}
 		}
 		}

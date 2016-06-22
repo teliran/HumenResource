@@ -245,7 +245,7 @@ public class Transport {
 			System.out.println("There isn't a truck with that ID");
 			return false;
 		}
-		if (tarr[0].available)
+		if (!tarr[0].available)
 		{
 			System.out.println("This truck is occupation");
 			return false;			
@@ -260,12 +260,12 @@ public class Transport {
 			System.out.println("There isn't such driver");
 			return false;
 		}
-		if (darr[0].get_available().equals("YES"))
+		if (darr[0].get_available().equals("NO"))
 		{
 			System.out.println("This driver is occupation");
 			return false;			
 		}
-		darr[0].set_available("NO");
+		darr[0].set_available("YES");
 		return true;
 	}
 	
@@ -352,8 +352,6 @@ public class Transport {
 				endIndex++;
 			des = des+Helper.substring(0, endIndex);
 		}
-		tempTruck.setAvailabilty(false);
-		tempDriver.set_available("NO");
 		
 		return new Transport(true,ID,driverID,truckID,des,from,date ,time,contact,con,deco);
 	}
@@ -835,7 +833,7 @@ public class Transport {
 			tmp = tmp+"deocNum LIKE '%"+value+"%'";
 			break;
 		case ("Status"):
-			tmp = tmp+"Status LIKE '%"+value+"%'";
+			tmp = tmp+"Status = '"+value+"'";
 			break;
 		default:
 			return null;

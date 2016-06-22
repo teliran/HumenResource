@@ -52,7 +52,7 @@ public class Order_DAL {
 			try {
 				pst.executeUpdate();
 				pst.close();
-				System.out.println("shit now "+order.getList().size());
+	
 				for(int i=0;i<order.getList().size();i++)
 				{
 					ProductQun proquen=order.getList().get(i);
@@ -214,7 +214,7 @@ public class Order_DAL {
 				pst1.setInt(1, orderNum);
 				pst1.setString(2, supId);
 				pst1.setString(3, proQun.getPro().getCatNum());
-				pst1.setDate(4, signDate);
+				pst1.setDate(4, (Date)signDate);
 				pst1.setDouble(5, proQun.getQun());
 				pst1.executeUpdate();
 				pst1.close();
