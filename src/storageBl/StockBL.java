@@ -185,6 +185,8 @@ private BL.IBL b;
 	public void UpdateStoreSupply(Order order){
 		IBL bl_bl;
 		bl_bl = b;
+		if(order == null)
+			return;
 		List<ProductQun> lpq = order.getList();
 		
 		for(ProductQun lpq_one : lpq){
